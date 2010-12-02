@@ -75,7 +75,7 @@ public class VerRec {
 	public double getBalance() {
 		// Some strange feature in Java that causes small values close to zero
 		// Correcting by setting these small values to exactly zero.
-		if (m_balance!=0.0 && m_balance < 1.0E-10) m_balance = 0.0;
+		// if (m_balance!=0.0 && m_balance < 1.0E-10) m_balance = 0.0;
 		return(m_balance);
 	}
 	
@@ -165,6 +165,22 @@ public class VerRec {
 	 */
 	public void setTransList(Vector<TransRec> transList) {
 		this.m_transList = transList;
+	}
+
+	public String toSieString() {
+		StringBuffer s = new StringBuffer();
+		s.append("#VER \"" + (m_serie!=null ? m_serie : "") + "\" \"" + (m_verNr!=null ? m_verNr : "") + "\"");
+		s.append(" " + SIEFile.s_dateFormat.format(m_verDatum) + " \"" + (m_verText!=null ? m_verText : "") + "\"");
+		if (m_regDatum!=null) {
+			s.append(" " + SIEFile.s_dateFormat.format(m_regDatum));
+		}
+		s.append("\r\n");
+		s.append("{\r\n");
+		for (int i=0; i<m_transList.size(); i++) {
+			s.append(m_transList.get(i).toSieString());
+		}
+		s.append("}\r\n");
+		return(s.toString());
 	}
 	
 	public String toString() {

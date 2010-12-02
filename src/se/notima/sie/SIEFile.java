@@ -14,16 +14,24 @@ import java.text.*;
  */
 public class SIEFile {
 
-    public static final SimpleDateFormat s_dateFormat = new SimpleDateFormat("yyyyMMdd");   
+    public static final SimpleDateFormat s_dateFormat = new SimpleDateFormat("yyyyMMdd");
+    public static final DecimalFormat s_amountFormat = new DecimalFormat("#####################.##");
+    public static final DecimalFormat s_qtyFormat = new DecimalFormat("#####################.####");
+    
+    static {
+    	DecimalFormatSymbols ds = new DecimalFormatSymbols();
+    	ds.setDecimalSeparator('.');
+    	s_amountFormat.setDecimalFormatSymbols(ds);
+    }
     
     //=======================
     // IDENTIFIKATIONSPOSTER
     // #FLAGGA - Flaggpost som anger om filen tagits emot av mottagaren
-    protected int m_flagga;
+    protected int m_flagga = 0;
     // #PROGRAM - Vilket program som genererat filen
     protected String m_program;
     // #FORMAT - Vilken teckenuppsättning som använts
-    protected String m_format;
+    protected String m_format = "PC8";
     // #GEN - När och av vem som filen genererats
     protected Date m_genDatum;
     protected String m_genSign;
@@ -56,6 +64,8 @@ public class SIEFile {
     protected File m_sieFile;
     // Lines in file
     protected Vector<String> m_lines;
+    // Account map
+    protected Map<String,AccountRec> m_accountMap = new TreeMap<String,AccountRec>();
 
     /**
      * Default constructor
@@ -72,6 +82,18 @@ public class SIEFile {
         m_sieFile = new File(filePath);
     }
 
+    /**
+     * Sets account map from external source
+     * @param accountMap
+     */
+    public void setAccountMap(Map<String,AccountRec> accountMap) {
+    	m_accountMap = accountMap;
+    }
+    
+    public Map<String,AccountRec> getAccountMap() {
+    	return(m_accountMap);
+    }
+    
     /**
      * Reads the file and extracts file identification data
      */
@@ -225,6 +247,13 @@ public class SIEFile {
         }
     }
 
+    public String toSieString() {
+    	StringBuffer buf = new StringBuffer();
+    	buf.append("#FLAGGA " + m_flagga + "\r\n");
+    	buf.append("#FORMAT " + m_format + "\r\n"); // Only support for PC8
+    	return(buf.toString());
+    }
+    
     @Override
     public String toString() {
         StringBuffer buf = new StringBuffer();

@@ -102,10 +102,35 @@ public class TransRec {
 		this.m_kvantitet = kvantitet;
 	}
 	
+	/**
+	 * Prints this record in SIE format
+	 * @return
+	 */
+	public String toSieString() {
+		// Create object list
+		String objList = ""; // TODO: Make object list
+		StringBuffer s = new StringBuffer();
+		s.append("    #TRANS " + m_kontoNr + " {" + objList + "} " + 
+				SIEFile.s_amountFormat.format(m_belopp) + " \"");
+		if (m_transDatum!=null) {
+				s.append(SIEFile.s_dateFormat.format(m_transDatum));
+		}
+		s.append("\" \"" + (m_transText!=null ? m_transText : "") + "\"");
+		if (m_kvantitet!=0) {
+			s.append(" " + SIEFile.s_qtyFormat.format(m_kvantitet));
+		}
+		s.append("\r\n");
+		return(s.toString());
+	}
+	
+	/**
+	 * Prints this record in human readable format
+	 */
 	public String toString() {
 		StringBuffer s = new StringBuffer();
 		s.append("\tKontonr: " + m_kontoNr);
-		s.append("\tBelopp : " + m_belopp + "\n");
+		s.append("\tBelopp : " + m_belopp);
+		s.append("\t" + (m_transText!=null ? m_transText : "") + "\n");
 		return(s.toString());
 	}
 	
