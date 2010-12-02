@@ -20,6 +20,11 @@ public class AccountRec {
     private String  accountNo;
     private String  accountName;
 
+    public AccountRec(String accountNo, String accountName) {
+    	this.accountNo = accountNo;
+    	this.accountName = accountName;
+    }
+    
     public AccountRec(String line) throws SIEParseException {
 
         Matcher m = accountPattern.matcher(line);
@@ -46,6 +51,10 @@ public class AccountRec {
 
     public void setAccountName(String accountName) {
         this.accountName = accountName;
+    }
+    
+    public String toSieString() {
+    	return("#KONTO " + accountNo + " \"" + accountName + "\"\r\n");
     }
     
 }

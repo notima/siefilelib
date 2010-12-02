@@ -1,5 +1,11 @@
 package se.notima.sie;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.*;
 
 /**
@@ -12,7 +18,6 @@ import java.util.*;
 public class SIEFileType4 extends SIEFile {
 
 	private Vector<VerRec> m_verRecs;
-	private Map<String, AccountRec> m_accountRecs;
 	private Map<String, SRURec> m_sruRecs;
 	private TreeMap<String, Vector<BalanceRec>> m_balanceRecs;
 	private TreeMap<String, ResRec> m_resRecs;
@@ -32,14 +37,26 @@ public class SIEFileType4 extends SIEFile {
 		return(m_verRecs);
 	}
 	
+	public void addVerList(List<VerRec> list) {
+		if (m_verRecs==null) {
+			m_verRecs = new Vector<VerRec>();
+		}
+		m_verRecs.addAll(list);
+	}
+	
+	public void addVerRecord(VerRec r) {
+		if (m_verRecs==null) {
+			m_verRecs = new Vector<VerRec>();
+		}
+		m_verRecs.add(r);
+	}
+	
 	@Override
 	public void readFile() throws Exception {
 		// First read basic attributes
 		super.readFile();
 		m_lineNo = 0;
 		m_verNo = 0;
-		// Create map for storing accounts
-		m_accountRecs = new TreeMap<String, AccountRec>();
 		AccountRec account;
 		// Create map for storing SRU-codes
 		m_sruRecs = new TreeMap<String, SRURec>();
@@ -59,7 +76,7 @@ public class SIEFileType4 extends SIEFile {
 			m_line = m_lines.get(m_lineNo);
 			if (m_line.startsWith("#KONTO")) {
 				account = new AccountRec(m_line);
-				m_accountRecs.put(account.getAccountNo(), account);
+				m_accountMap.put(account.getAccountNo(), account);
 			}
 			if (m_line.startsWith("#SRU")) {
 				sru = new SRURec(m_line);
@@ -110,6 +127,44 @@ public class SIEFileType4 extends SIEFile {
 		return (rec);
 	}
 
+	public void writeToFile() throws Exception {
+		
+		// Open account map file (if any)
+		BufferedWriter writer = new BufferedWriter(
+				new OutputStreamWriter(new FileOutputStream(m_sieFile), "IBM437"));
+		writer.append(toSieString());
+		writer.close();
+		
+	}
+	
+	public String toSieString() {
+		String superString = super.toSieString();
+		StringBuffer s = new StringBuffer();
+		s.append(superString);
+		// Add specifics
+		s.append("#SIETYP 4\r\n");
+		s.append("#PROGRAM \"" + (m_program!=null ? m_program : "") + "\"\r\n");
+		if (m_genDatum==null) {
+			m_genDatum = Calendar.getInstance().getTime();
+		}
+		s.append("#GEN " + SIEFile.s_dateFormat.format(m_genDatum) + "\r\n");
+		s.append("#FNAMN \"" + (m_fnamn!=null ? m_fnamn : "") + "\"\r\n");
+		s.append("#ORGNR " + (m_orgNr!=null ? m_orgNr : "") + "\r\n");
+		s.append("#KPTYP " + (m_kptyp!=null ? m_kptyp : "") + "\r\n");
+		// Add specifications of accounts
+		Collection<AccountRec> accounts = m_accountMap.values();
+		for (AccountRec a : accounts) {
+			s.append(a.toSieString());
+		}
+		// Add verifications
+		if (m_verRecs != null) {
+			for (int i = 0; i < m_verRecs.size(); i++) {
+				s.append(m_verRecs.get(i).toSieString());
+			}
+		}
+		return (s.toString());
+	}
+	
 	public String toString() {
 		String superString = super.toString();
 		StringBuffer s = new StringBuffer();
