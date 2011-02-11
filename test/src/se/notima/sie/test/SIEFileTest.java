@@ -1,0 +1,28 @@
+package se.notima.sie.test;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+import se.notima.sie.SIEFile;
+import se.notima.sie.SIEFileType4;
+
+public class SIEFileTest {
+
+	@Test
+	public void testReadFile() {
+
+		SIEFile	m_test;			
+		
+		m_test = new SIEFileType4("C:\\SIE\\LÖN.SI");
+		try {
+			m_test.readFile();
+			System.out.println(m_test.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+	}
+
+}
