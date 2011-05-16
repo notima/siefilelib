@@ -13,7 +13,7 @@ import java.util.regex.*;
 public class VerRec {
 
 	private Pattern	verPatternPart1 = 
-		Pattern.compile("#VER\\s+\"(.*?)\"\\s+\"{0,1}(.*?)\"{0,1}\\s+(\\d{8})(.*)");
+		Pattern.compile("#VER\\s+\"{0,1}(.*?)\"{0,1}\\s+\"{0,1}(.*?)\"{0,1}\\s+(\\d{8})(.*)");
 	private Pattern verPatternPart2 =
 		Pattern.compile("\\s*\"(.*?)\"\\s*(\\d{8}){0,1}");
 	private String				m_serie = "";
