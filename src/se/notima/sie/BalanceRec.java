@@ -23,6 +23,13 @@ public class BalanceRec {
 
     public BalanceRec() {}
     
+    public BalanceRec(String acctNo, double balance) {
+    	inBalance = true;
+    	yearOffset = 0;
+    	accountNo = acctNo;
+    	this.balance = balance;
+    }
+    
     public BalanceRec(String line) throws SIEParseException {
         Matcher m = balancePattern.matcher(line);
         if (m.matches()) {
@@ -34,6 +41,22 @@ public class BalanceRec {
             throw new SIEParseException("Raden är inte en korrekt IB/UB-rad: " + line);
         }
     }
+
+	public String toSieString() {
+		StringBuffer s = new StringBuffer();
+		s.append("#");
+		if (inBalance) {
+			s.append("I");
+		} else {
+			s.append("U");
+		}
+		s.append("B ");
+		s.append(yearOffset + " ");
+		s.append(accountNo + " " + SIEFile.s_amountFormat.format(balance));
+		s.append("\r\n");
+		return(s.toString());
+	}
+    
     
     public boolean isInBalance() {
         return inBalance;

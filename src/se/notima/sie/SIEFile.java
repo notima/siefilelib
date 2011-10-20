@@ -66,7 +66,13 @@ public class SIEFile {
     protected Vector<String> m_lines;
     // Account map
     protected Map<String,AccountRec> m_accountMap = new TreeMap<String,AccountRec>();
-
+    // SRU Map
+	protected Map<String, SRURec> m_sruRecs;
+	// Balance map
+	protected Map<String, Vector<BalanceRec>> m_balanceRecs;
+	// Result record map
+	protected Map<String, ResRec> m_resRecs;
+    
     /**
      * Default constructor
      */
@@ -83,6 +89,19 @@ public class SIEFile {
     }
 
     /**
+     * Adds account record to the SIE-file.
+     * 
+     * @param rec
+     */
+    public void addAccountRecord(AccountRec rec) {
+    	if (m_accountMap==null) {
+			// Create a new accountMap
+			m_accountMap = new TreeMap<String,AccountRec>();
+    	}
+    	m_accountMap.put(rec.getAccountNo(), rec);
+    }
+    
+    /**
      * Sets account map from external source
      * @param accountMap
      */
@@ -91,9 +110,67 @@ public class SIEFile {
     }
     
     public Map<String,AccountRec> getAccountMap() {
+    	if (m_accountMap==null) {
+			// Create a new accountMap
+			m_accountMap = new TreeMap<String,AccountRec>();
+    	}
     	return(m_accountMap);
     }
     
+	/**
+	 * Return balance records.
+	 * There can be more than one or two balance records per account
+	 * UB and IB
+	 * 
+	 * @return
+	 */
+	public Map<String, Vector<BalanceRec>> getBalanceMap() {
+		if (m_balanceRecs==null) {
+			m_balanceRecs = new TreeMap<String, Vector<BalanceRec>>();
+		}
+		return(m_balanceRecs);
+	}
+	
+	/**
+	 * Set balance records. There can be more than one or two balance records per account
+	 * UB and IB
+	 * 
+	 * @return
+	 */
+	public void setBalanceMap(Map<String, Vector<BalanceRec>> rec) {
+		m_balanceRecs = rec;
+	}
+
+	/**
+	 * Adds balance record to file
+	 * @param rec
+	 */
+	public void addBalanceRecord(BalanceRec rec) {
+		if (m_balanceRecs==null) {
+			m_balanceRecs = new TreeMap<String, Vector<BalanceRec>>();
+		}
+		// First check if we already have records for this account
+		Vector<BalanceRec> recs = m_balanceRecs.get(rec.getAccountNo());
+		if (recs==null) {
+			recs = new Vector<BalanceRec>();
+		}
+		recs.add(rec);
+		m_balanceRecs.put(rec.getAccountNo(), recs);
+	}
+
+    /**
+     * Adds result to the SIE-file.
+     * 
+     * @param rec
+     */
+    public void addResultRecord(ResRec rec) {
+    	if (m_resRecs==null) {
+			// Create a new Map
+			m_resRecs = new TreeMap<String,ResRec>();
+    	}
+    	m_resRecs.put(rec.getAccountNo(), rec);
+    }
+	
     /**
      * Reads the file and extracts file identification data
      */
@@ -247,6 +324,29 @@ public class SIEFile {
         }
     }
 
+	public void setProgram(String program) {
+		m_program = program;
+	}
+	
+	public String getProgram() {
+		return(m_program);
+	}
+	
+	public void setOrgNr(String orgNr) {
+		m_orgNr = orgNr;
+	}
+	
+	public String getOrgNr() {
+		return(m_orgNr);
+		
+	}
+	public void setFNamn(String fnamn) {
+		m_fnamn = fnamn;
+	}
+	public String getFNamn() {
+		return(m_fnamn);
+	}
+    
     public String toSieString() {
     	StringBuffer buf = new StringBuffer();
     	buf.append("#FLAGGA " + m_flagga + "\r\n");
