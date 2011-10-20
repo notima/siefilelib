@@ -22,6 +22,11 @@ public class ResRec {
 
     public ResRec() {}
     
+    public ResRec(String acctNo, double bal) {
+    	accountNo = acctNo;
+    	balance = bal;
+    }
+    
     public ResRec(String line) throws SIEParseException {
         
         Matcher m = resPattern.matcher(line);
@@ -34,6 +39,16 @@ public class ResRec {
         }
         
     }
+    
+    
+	public String toSieString() {
+		StringBuffer s = new StringBuffer();
+		s.append("#RES ");
+		s.append(yearOffset + " ");
+		s.append(accountNo + " " + SIEFile.s_amountFormat.format(balance));
+		s.append("\r\n");
+		return(s.toString());
+	}
     
     
     public int getYearOffset() {

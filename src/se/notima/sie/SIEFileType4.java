@@ -18,9 +18,6 @@ import java.util.*;
 public class SIEFileType4 extends SIEFile {
 
 	private Vector<VerRec> m_verRecs;
-	private Map<String, SRURec> m_sruRecs;
-	private TreeMap<String, Vector<BalanceRec>> m_balanceRecs;
-	private TreeMap<String, ResRec> m_resRecs;
 
 	private int m_lineNo;
 	private int m_verNo;
@@ -29,7 +26,7 @@ public class SIEFileType4 extends SIEFile {
 	public SIEFileType4(String filename) {
 		super(filename);
 	}
-
+	
 	/**
 	 * @return Return the transaction records in the file
 	 */
@@ -152,10 +149,31 @@ public class SIEFileType4 extends SIEFile {
 		s.append("#ORGNR " + (m_orgNr!=null ? m_orgNr : "") + "\r\n");
 		s.append("#KPTYP " + (m_kptyp!=null ? m_kptyp : "") + "\r\n");
 		// Add specifications of accounts
-		Collection<AccountRec> accounts = m_accountMap.values();
-		for (AccountRec a : accounts) {
-			s.append(a.toSieString());
+		if (m_accountMap!=null) {
+			Collection<AccountRec> accounts = m_accountMap.values();
+			for (AccountRec a : accounts) {
+				s.append(a.toSieString());
+			}
 		}
+		
+		// Add balance records
+		if (m_balanceRecs!=null) {
+			Collection<Vector<BalanceRec>> balanceRecs = m_balanceRecs.values();
+			for (Vector<BalanceRec> bv : balanceRecs) {
+				for (BalanceRec b : bv) {
+					s.append(b.toSieString());
+				}
+			}
+		}
+		
+		// Add result records
+		if (m_resRecs!=null) {
+			Collection<ResRec> resRecs = m_resRecs.values();
+			for (ResRec r : resRecs) {
+				s.append(r.toSieString());
+			}
+		}
+		
 		// Add verifications
 		if (m_verRecs != null) {
 			for (int i = 0; i < m_verRecs.size(); i++) {

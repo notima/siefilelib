@@ -28,6 +28,13 @@ public class TransRec {
 		
 	}
 	
+	public TransRec(String acctNr, double amount, Date transDate, String desc) {
+		m_kontoNr = acctNr;
+		m_belopp = amount;
+		m_transDatum = transDate;
+		m_transText = desc;
+	}
+	
 	public TransRec(String line) {
 		Matcher m = transPatternPart1.matcher(line);
 		String objLine, beloppStr;
