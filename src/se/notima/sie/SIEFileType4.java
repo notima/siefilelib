@@ -144,16 +144,18 @@ public class SIEFileType4 extends SIEFile {
 		if (m_genDatum==null) {
 			m_genDatum = Calendar.getInstance().getTime();
 		}
-		s.append("#GEN " + SIEFile.s_dateFormat.format(m_genDatum) + "\r\n");
+		s.append("#GEN " + SIEFile.s_dateFormat.format(m_genDatum) + "\r\n\r\n");
 		s.append("#FNAMN \"" + (m_fnamn!=null ? m_fnamn : "") + "\"\r\n");
 		s.append("#ORGNR " + (m_orgNr!=null ? m_orgNr : "") + "\r\n");
 		s.append("#KPTYP " + (m_kptyp!=null ? m_kptyp : "") + "\r\n");
+		s.append("\r\n");
 		// Add specifications of accounts
 		if (m_accountMap!=null) {
 			Collection<AccountRec> accounts = m_accountMap.values();
 			for (AccountRec a : accounts) {
 				s.append(a.toSieString());
 			}
+			s.append("\r\n");
 		}
 		
 		// Add balance records
@@ -164,6 +166,7 @@ public class SIEFileType4 extends SIEFile {
 					s.append(b.toSieString());
 				}
 			}
+			s.append("\r\n");
 		}
 		
 		// Add result records
@@ -172,6 +175,7 @@ public class SIEFileType4 extends SIEFile {
 			for (ResRec r : resRecs) {
 				s.append(r.toSieString());
 			}
+			s.append("\r\n");
 		}
 		
 		// Add verifications

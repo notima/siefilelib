@@ -11,11 +11,10 @@ import java.util.regex.*;
  */
 public class TransRec {
 
-	private Pattern	transPatternPart1 = 
+	private static Pattern	transPatternPart1 = 
 		Pattern.compile("\\s*#TRANS\\s+(\\w+)\\s+\\{(.*?)\\}\\s+([0-9,.,-]+)\\s*(.*)");
-	private Pattern transPatternPart2 =
+	private static Pattern transPatternPart2 =
 		Pattern.compile("\\s*(\\d{8}){0,1}\\s*?(.*?)\\s*(\\d*)");
-	
 	
 	private	String			m_kontoNr;
 	private Vector<String>	m_objektLista;
@@ -32,7 +31,7 @@ public class TransRec {
 		m_kontoNr = acctNr;
 		m_belopp = amount;
 		m_transDatum = transDate;
-		m_transText = desc;
+		m_transText = SIEFile.validateText(desc);
 	}
 	
 	public TransRec(String line) {
@@ -100,7 +99,7 @@ public class TransRec {
 		return m_transText;
 	}
 	public void setTransText(String transText) {
-		this.m_transText = transText;
+		this.m_transText = SIEFile.validateText(transText);
 	}
 	public double getKvantitet() {
 		return m_kvantitet;

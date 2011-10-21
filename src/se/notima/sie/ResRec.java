@@ -13,7 +13,7 @@ import java.util.regex.*;
  */
 public class ResRec {
 
-    private Pattern	resPattern = 
+    private static Pattern	resPattern = 
             Pattern.compile("#RES\\s+([-|\\d]+?)\\s+(\\d+?)\\s+([-|\\.|\\d]+)");
     
     private int     yearOffset;
