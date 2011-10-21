@@ -89,6 +89,30 @@ public class SIEFile {
     }
 
     /**
+     * Helper function to make sure the text doesn't contain any illegal characters
+     * (such as linefeed etc). " are prepended with \
+     * @param text
+     * @return
+     */
+    public static String validateText(String text) {
+    	if (text==null) return(null);
+    	StringBuffer result = new StringBuffer();
+    	char c;
+    	for(int i=0; i<text.length(); i++) {
+    		c = text.charAt(i);
+    		if (c=='"') {
+    			result.append("\\\"");
+    		}
+    		if (c=='\r' || c=='\n' || c=='\t') {
+    			// Skip
+    			continue;
+    		}
+    		result.append(c);
+    	}
+    	return(result.toString());
+    }
+    
+    /**
      * Adds account record to the SIE-file.
      * 
      * @param rec
@@ -347,6 +371,15 @@ public class SIEFile {
 		return(m_fnamn);
 	}
     
+	public void setAdress(String adress) {
+		m_adress = adress;
+	}
+	
+	public String getAdress() {
+		return(m_adress);
+	}
+	
+	
     public String toSieString() {
     	StringBuffer buf = new StringBuffer();
     	buf.append("#FLAGGA " + m_flagga + "\r\n");

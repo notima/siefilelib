@@ -12,9 +12,9 @@ import java.util.regex.*;
 
 public class VerRec {
 
-	private Pattern	verPatternPart1 = 
+	private static Pattern	verPatternPart1 = 
 		Pattern.compile("#VER\\s+\"{0,1}(.*?)\"{0,1}\\s+\"{0,1}(.*?)\"{0,1}\\s+(\\d{8})(.*)");
-	private Pattern verPatternPart2 =
+	private static Pattern verPatternPart2 =
 		Pattern.compile("\\s*\"(.*?)\"\\s*(\\d{8}){0,1}");
 	private String				m_serie = "";
 	private String				m_verNr = "";
@@ -140,7 +140,7 @@ public class VerRec {
 	 * @param verText the verText to set
 	 */
 	public void setVerText(String verText) {
-		this.m_verText = verText;
+		m_verText = SIEFile.validateText(verText);
 	}
 	/**
 	 * @return the regDatum

@@ -13,7 +13,7 @@ import java.util.regex.*;
  */
 public class BalanceRec {
 
-    private Pattern	balancePattern = 
+    private static Pattern	balancePattern = 
             Pattern.compile("#[I|U]B\\s+([-|\\d]+?)\\s+(\\d+?)\\s+([-|\\.|\\d]+)");
     
     private boolean inBalance;

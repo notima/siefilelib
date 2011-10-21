@@ -13,7 +13,7 @@ import java.util.regex.*;
  */
 public class SRURec {
 
-    private Pattern	sruPattern = 
+    private static Pattern	sruPattern = 
             Pattern.compile("#SRU\\s+(\\d+?)\\s+(\\d+?)");
     
     private String  accountNo;

@@ -14,7 +14,7 @@ import java.util.regex.*;
  */
 public class AccountRec {
 
-    private Pattern	accountPattern = 
+    private static Pattern	accountPattern = 
             Pattern.compile("#KONTO\\s+(\\d+?)\\s+\"{0,1}(.*?)\"{0,1}");
     
     private String  accountNo;
