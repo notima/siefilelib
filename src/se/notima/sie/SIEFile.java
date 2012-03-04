@@ -182,6 +182,26 @@ public class SIEFile {
 		m_balanceRecs.put(rec.getAccountNo(), recs);
 	}
 
+	/**
+	 * Set difference.
+	 * Sets the result to the difference between the existing result record
+	 * and the new result record. Used when first adding the incoming result
+	 * and then adding the outgoing result.
+	 */
+	public void diffResultRecord(ResRec rec) {
+    	if (m_resRecs==null) {
+			// Create a new Map
+			m_resRecs = new TreeMap<String,ResRec>();
+    	}
+    	// First check if there's an existing record
+    	ResRec existing = m_resRecs.get(rec.getAccountNo());
+    	if (existing!=null) {
+    		existing.setBalance(rec.getBalance()-existing.getBalance());
+    	} else {
+    		m_resRecs.put(rec.getAccountNo(), rec);
+    	}
+	}
+	
     /**
      * Adds result to the SIE-file.
      * 
@@ -192,7 +212,13 @@ public class SIEFile {
 			// Create a new Map
 			m_resRecs = new TreeMap<String,ResRec>();
     	}
-    	m_resRecs.put(rec.getAccountNo(), rec);
+    	// First check if there's an existing record
+    	ResRec existing = m_resRecs.get(rec.getAccountNo());
+    	if (existing!=null) {
+    		existing.setBalance(rec.getBalance()+existing.getBalance());
+    	} else {
+    		m_resRecs.put(rec.getAccountNo(), rec);
+    	}
     }
 	
     /**
