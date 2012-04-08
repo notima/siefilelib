@@ -1,0 +1,72 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.notima.sie</groupId>
+  <artifactId>siefilelib</artifactId>
+  <version>0.0.9</version>
+  <name>SIE-file library</name>
+  <description>Java library to manage (read/write) SIE-files.
+SIE is an open standard for accounting information in Sweden.
+www.sie.se</description>
+
+  <licenses>
+  	<license>
+  		<name>GNU General Public Licence</name>
+  		<url>http://www.gnu.org/licenses/gpl.html</url>
+  		<distribution>repo</distribution>
+  	</license>
+  </licenses>
+
+
+  <dependencies>
+  	<dependency>
+  		<groupId>junit</groupId>
+  		<artifactId>junit</artifactId>
+  		<version>4.10</version>
+  	</dependency>
+  </dependencies>
+
+
+  <scm>
+  	<developerConnection>Daniel Tamm</developerConnection>
+  	<url>https://bitbucket.org/dantam/siefilelib</url>
+  </scm>
+  <organization>
+  	<name>ADempiere Sverige KB</name>
+  	<url>www.adempiere.se</url>
+  </organization>
+  <issueManagement>
+  	<url>https://bitbucket.org/dantam/siefilelib/issues</url>
+  	<system>BitBucket</system>
+  </issueManagement>
+  
+  <profiles>
+  	<profile>
+ 		<id>release-sign-artifacts</id>
+    	<activation>
+	      	<property>
+	        	<name>performRelease</name>
+	        	<value>true</value>
+	      	</property>
+    	</activation>
+		<build>
+  		<plugins>
+  			<plugin>
+		        <groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-gpg-plugin</artifactId>
+		        <executions>
+		          <execution>
+		            <id>sign-artifacts</id>
+		            <phase>verify</phase>
+		            <goals>
+		              <goal>sign</goal>
+		            </goals>
+		          </execution>
+		        </executions>  		
+  			</plugin>
+	  		</plugins>
+  		</build>
+  	</profile>
+  </profiles>
+    
+  
+</project>
