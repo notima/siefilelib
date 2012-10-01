@@ -15,7 +15,7 @@ public class VerRec {
 	private static Pattern	verPatternPart1 = 
 		Pattern.compile("#VER\\s+\"{0,1}(.*?)\"{0,1}\\s+\"{0,1}(.*?)\"{0,1}\\s+(\\d{8})(.*)");
 	private static Pattern verPatternPart2 =
-		Pattern.compile("\\s*\"(.*?)\"\\s*(\\d{8}){0,1}");
+		Pattern.compile("\\s*\"{0,1}(.*?)\"{0,1}\\s*(\\d{8}){0,1}");
 	private String				m_serie = "";
 	private String				m_verNr = "";
 	private Date				m_verDatum;
