@@ -48,7 +48,7 @@ public class TransRec {
 			if (g4.length()>0) {
 				Matcher m2 = transPatternPart2.matcher(g4);
 				if (m2.matches()) {
-					if (m2.group(1).length()==8) {
+					if (m2.group(1)!=null && m2.group(1).length()==8) {
 						try {
 							m_transDatum = SIEFile.s_dateFormat.parse(m2.group(1));
 						} catch (java.text.ParseException pe) {
