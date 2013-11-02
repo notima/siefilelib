@@ -1,7 +1,5 @@
 package org.notima.sie.test;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 import org.notima.sie.SIEFile;
 import org.notima.sie.SIEFileType4;

@@ -1,11 +1,11 @@
 package org.notima.sie.test;
 
-import junit.framework.*;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
+import junit.framework.TestCase;
+
 import org.notima.sie.VerRec;
-
-import java.util.*;
-
-import org.notima.sie.*;
 
 public class TestVerRec extends TestCase {
 
