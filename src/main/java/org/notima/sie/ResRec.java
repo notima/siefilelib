@@ -30,7 +30,7 @@ public class ResRec {
     public ResRec(String line) throws SIEParseException {
         
         Matcher m = resPattern.matcher(line);
-        if (m.matches()) {
+        if (m.find()) {
             yearOffset = Integer.parseInt(m.group(1));
             accountNo = m.group(2);
             balance = Double.parseDouble(m.group(3));

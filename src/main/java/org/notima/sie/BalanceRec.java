@@ -32,7 +32,7 @@ public class BalanceRec {
     
     public BalanceRec(String line) throws SIEParseException {
         Matcher m = balancePattern.matcher(line);
-        if (m.matches()) {
+        if (m.find()) {
             inBalance = line.charAt(1)=='I';
             yearOffset = Integer.parseInt(m.group(1));
             accountNo = m.group(2);
