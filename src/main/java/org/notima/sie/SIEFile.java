@@ -276,6 +276,7 @@ public class SIEFile {
                 m_lines.add(line);
             }
         }
+        fr.close();
 
     }
     //====================================================
