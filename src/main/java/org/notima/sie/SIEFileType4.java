@@ -10,8 +10,8 @@ import java.util.TreeMap;
 import java.util.Vector;
 
 /**
- * Filtyp 4 Är för import/export av transaktioner. Kontoplan, ingående balanser
- * och verifikat följer med.
+ * Filtyp 4 ï¿½r fï¿½r import/export av transaktioner. Kontoplan, ingï¿½ende balanser
+ * och verifikat fï¿½ljer med.
  * 
  * @author Daniel Tamm
  * 
@@ -60,9 +60,9 @@ public class SIEFileType4 extends SIEFile {
 		m_sruRecs = new TreeMap<String, SRURec>();
 		SRURec sru;
 		// Create map for storing balance records
-		m_balanceRecs = new TreeMap<String, Vector<BalanceRec>>();
+		m_balanceRecs = new TreeMap<String, List<BalanceRec>>();
 		BalanceRec balanceRec;
-		Vector<BalanceRec> brecV;
+		List<BalanceRec> brecV;
 		// Create map for storing balance for result accounts
 		ResRec resRec;
 		m_resRecs = new TreeMap<String, ResRec>();
@@ -161,8 +161,8 @@ public class SIEFileType4 extends SIEFile {
 		
 		// Add balance records
 		if (m_balanceRecs!=null) {
-			Collection<Vector<BalanceRec>> balanceRecs = m_balanceRecs.values();
-			for (Vector<BalanceRec> bv : balanceRecs) {
+			Collection<List<BalanceRec>> balanceRecs = m_balanceRecs.values();
+			for (List<BalanceRec> bv : balanceRecs) {
 				for (BalanceRec b : bv) {
 					s.append(b.toSieString());
 				}
