@@ -6,7 +6,7 @@ import java.util.regex.*;
 import java.text.*;
 
 /**
- * Basklass f�r SIE-filer. Inneh�ller attribut som �r gemensamma f�r alla
+ * Basklass för SIE-filer. Innehåller attribut som är gemensamma för alla
  * typer av SIE-filer.
  * 
  * @author Daniel Tamm
@@ -49,8 +49,10 @@ public class SIEFile {
     protected String m_adress;
     // #FNAMN - Fullständigt namn för det företag som exporterats
     protected String m_fnamn;
-    // #RAR - R�kenskaps�r
+    // #RAR - Räkenskapsår
     protected String m_rar;
+    // #VALUTA - Valuta
+    protected String m_valuta;
     // #TAXAR - Taxeringsår för deklarationsinformation (SRU-koder)
     protected String m_taxar;
     // #OMFATTN - Datum för periodsaldons omfattning
@@ -63,13 +65,15 @@ public class SIEFile {
     // Pointer to file
     protected File m_sieFile;
     // Lines in file
-    protected Vector<String> m_lines;
+    protected List<String> m_lines;
+    // Fiscal years
+    protected Map<Integer, RARRec> m_rarMap = new TreeMap<Integer, RARRec>();
     // Account map
     protected Map<String,AccountRec> m_accountMap = new TreeMap<String,AccountRec>();
     // SRU Map
 	protected Map<String, SRURec> m_sruRecs;
 	// Balance map
-	protected Map<String, Vector<BalanceRec>> m_balanceRecs;
+	protected Map<String, List<BalanceRec>> m_balanceRecs;
 	// Result record map
 	protected Map<String, ResRec> m_resRecs;
     
@@ -148,11 +152,22 @@ public class SIEFile {
 	 * 
 	 * @return
 	 */
-	public Map<String, Vector<BalanceRec>> getBalanceMap() {
+	public Map<String, List<BalanceRec>> getBalanceMap() {
 		if (m_balanceRecs==null) {
-			m_balanceRecs = new TreeMap<String, Vector<BalanceRec>>();
+			m_balanceRecs = new TreeMap<String, List<BalanceRec>>();
 		}
 		return(m_balanceRecs);
+	}
+	
+	/**
+	 * Return fiscal year
+	 * 
+	 * @param	0 for this year
+	 * 			-1 for previous year
+	 * @return	A RARRec if the information is available
+	 */
+	public RARRec getFiscalYear(int offset) {
+		return m_rarMap.get(offset);
 	}
 	
 	/**
@@ -161,7 +176,7 @@ public class SIEFile {
 	 * 
 	 * @return
 	 */
-	public void setBalanceMap(Map<String, Vector<BalanceRec>> rec) {
+	public void setBalanceMap(Map<String, List<BalanceRec>> rec) {
 		m_balanceRecs = rec;
 	}
 
@@ -171,10 +186,10 @@ public class SIEFile {
 	 */
 	public void addBalanceRecord(BalanceRec rec) {
 		if (m_balanceRecs==null) {
-			m_balanceRecs = new TreeMap<String, Vector<BalanceRec>>();
+			m_balanceRecs = new TreeMap<String, List<BalanceRec>>();
 		}
 		// First check if we already have records for this account
-		Vector<BalanceRec> recs = m_balanceRecs.get(rec.getAccountNo());
+		List<BalanceRec> recs = m_balanceRecs.get(rec.getAccountNo());
 		if (recs==null) {
 			recs = new Vector<BalanceRec>();
 		}
@@ -271,6 +286,17 @@ public class SIEFile {
                 parseKptyp(line);
                 lineRead = true;
             }
+            if (line.startsWith("#VALUTA")) {
+            	String[] cols = line.split("\\s+");
+            	if (cols.length>1);
+            		m_valuta = cols[1];
+            	lineRead = true;
+            }
+            if (line.startsWith("#RAR")) {
+            	parseRarRec(line);
+            	lineRead = true;
+            }
+            
             // If the line hasn't been recognized, add it
             if (!lineRead) {
                 m_lines.add(line);
@@ -355,6 +381,11 @@ public class SIEFile {
         }
     }
 
+    private void parseRarRec(String line) throws SIEParseException {
+    	RARRec r = new RARRec(line);
+    	m_rarMap.put(r.getRarNo(), r);
+    }
+    
     private void parseOrgNr(String line) throws SIEParseException {
         Pattern flaggaPattern = Pattern.compile("#ORGNR\\s+(\\d{6}-{0,1}\\d{4})");
         Matcher m = flaggaPattern.matcher(line);
