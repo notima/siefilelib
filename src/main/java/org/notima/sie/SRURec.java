@@ -26,7 +26,7 @@ public class SRURec {
     public SRURec(String line) throws SIEParseException {
 
         Matcher m = sruPattern.matcher(line);
-        if (m.matches()) {
+        if (m.find()) {
             accountNo = m.group(1);
             SRU = m.group(2);
         } else {
