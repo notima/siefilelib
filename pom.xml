@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.notima.sie</groupId>
   <artifactId>siefilelib</artifactId>
-  <version>0.0.9</version>
+  <version>1.0.0</version>
   <name>SIE-file library</name>
   <description>Java library to manage (read/write) SIE-files.
 SIE is an open standard for accounting information in Sweden.
@@ -17,13 +17,6 @@ www.sie.se</description>
   </licenses>
 
 
-  <dependencies>
-  	<dependency>
-  		<groupId>junit</groupId>
-  		<artifactId>junit</artifactId>
-  		<version>4.10</version>
-  	</dependency>
-  </dependencies>
 
 
   <scm>
@@ -72,4 +65,11 @@ www.sie.se</description>
   	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   
+  <dependencies>
+  	<dependency>
+  		<groupId>junit</groupId>
+  		<artifactId>junit</artifactId>
+  		<version>4.11</version>
+  	</dependency>
+  </dependencies>
 </project>

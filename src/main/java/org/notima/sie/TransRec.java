@@ -17,7 +17,7 @@ public class TransRec {
 		Pattern.compile("\\s*(\\d{8}){0,1}\\s*?(.*?)\\s*(\\d*)");
 	
 	private	String			m_kontoNr;
-	private Vector<String>	m_objektLista;
+	private List<ObjRec>	m_objektLista;
 	private double			m_belopp;
 	private Date			m_transDatum;
 	private String			m_transText;
@@ -34,7 +34,7 @@ public class TransRec {
 		m_transText = SIEFile.validateText(desc);
 	}
 	
-	public TransRec(String line) {
+	public TransRec(String line) throws SIEParseException {
 		Matcher m = transPatternPart1.matcher(line);
 		String objLine, beloppStr;
 		if (m.matches()) {
@@ -42,6 +42,9 @@ public class TransRec {
 			objLine = m.group(2);
 			beloppStr = m.group(3);
 			m_belopp = new Double(beloppStr);
+			if (objLine!=null && objLine.trim().length()>0) {
+				m_objektLista = ObjRec.parseObjList(objLine);
+			}
 		}
 		if (m.groupCount()>3) {
 			String g4 = m.group(4);
@@ -77,10 +80,10 @@ public class TransRec {
 	public void setKontoNr(String kontoNr) {
 		this.m_kontoNr = kontoNr;
 	}
-	public Vector<String> getObjektLista() {
+	public List<ObjRec> getObjektLista() {
 		return m_objektLista;
 	}
-	public void setObjektLista(Vector<String> objektLista) {
+	public void setObjektLista(List<ObjRec> objektLista) {
 		this.m_objektLista = objektLista;
 	}
 	public double getBelopp() {
