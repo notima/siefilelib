@@ -1,8 +1,10 @@
 package org.notima.sie.converter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import org.notima.sie.ObjRec;
 import org.notima.sie.TransRec;
 import org.notima.sie.VerRec;
 
@@ -27,7 +29,7 @@ public class CsvRecord10Collection {
 		
 		VerRec ver;
 		TransRec trec;
-		Vector<String> objList;
+		List<ObjRec> objList;
 		
 		for (CsvRecord10 r : m_records) {
 			
@@ -41,8 +43,8 @@ public class CsvRecord10Collection {
 			trec.setKontoNr(r.getAccountKey());
 			trec.setTransText(r.getTextField() + " " + r.getCommentField());
 			if (r.getDepartment()!=null && r.getDepartment().trim().length()>0) {
-				objList = new Vector<String>();
-				objList.add(r.getDepartment());
+				objList = new ArrayList<ObjRec>();
+				objList.add(new ObjRec(1, r.getDepartment()));
 				trec.setObjektLista(objList);
 			}
 			trec.setBelopp(r.getCashAmount());
@@ -95,15 +97,15 @@ public class CsvRecord10Collection {
 		ver.setVerText(rec.getTextField() + " " + rec.getCommentField());
 		
 		TransRec trec;
-		Vector<String> objList;
+		List<ObjRec> objList;
 		
 		for (CsvRecord10 r : m_records) {
 			trec = new TransRec();
 			trec.setKontoNr(r.getAccountKey());
 			trec.setTransText(r.getTextField() + " " + r.getCommentField());
 			if (r.getDepartment()!=null && r.getDepartment().trim().length()>0) {
-				objList = new Vector<String>();
-				objList.add(r.getDepartment());
+				objList = new ArrayList<ObjRec>();
+				objList.add(new ObjRec(1,r.getDepartment()));
 				trec.setObjektLista(objList);
 			}
 			trec.setBelopp(r.getCashAmount());

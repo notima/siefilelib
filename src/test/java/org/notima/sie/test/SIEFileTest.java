@@ -12,13 +12,14 @@ public class SIEFileTest {
 
 		SIEFile	m_test;			
 		
-		m_test = new SIEFileType4("C:\\SIE\\LÖN.SI");
+/*		m_test = new SIEFileType4("C:\\SIE\\Lï¿½N.SI");
+		
 		try {
 			m_test.readFile();
 			System.out.println(m_test.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		} */
 		
 		
 	}
