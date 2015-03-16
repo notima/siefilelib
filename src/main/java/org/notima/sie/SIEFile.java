@@ -117,6 +117,43 @@ public class SIEFile {
     }
     
     /**
+     * Adds rar specification
+     */
+    public void addRARRec(RARRec r) {
+    	if (r==null) return;
+    	if (m_rarMap==null) {
+    		m_rarMap = new TreeMap<Integer, RARRec>();
+    	}
+    	m_rarMap.put(r.getRarNo(), r);
+    }
+    
+    /**
+     * Print RAR specification according to standard format
+     * #RAR 0
+     * #RAR -1 etc
+     */
+    public String getRARSpecification() {
+    	
+    	StringBuffer buf = new StringBuffer();
+    	if (m_rarMap==null || m_rarMap.size()==0)
+    		return null;
+
+    	// Iterate through keys in reverse order
+    	RARRec r;
+    	for (Integer ii : m_rarMap.keySet()) {
+    		r = m_rarMap.get(ii);
+    		if (buf.length()>0) {
+    			buf.insert(0, "\r\n");
+    		}
+    		buf.insert(0, r.toSieString());
+    	}
+    	
+    	return buf.toString();
+    	
+    }
+    
+    
+    /**
      * Adds account record to the SIE-file.
      * 
      * @param rec
@@ -437,6 +474,13 @@ public class SIEFile {
 		return(m_adress);
 	}
 	
+	public void setKpTyp(String kpTyp) {
+		m_kptyp = kpTyp;
+	}
+	
+	public String getKpTyp() {
+		return m_kptyp;
+	}
 	
     public String toSieString() {
     	StringBuffer buf = new StringBuffer();

@@ -147,6 +147,13 @@ public class SIEFileType4 extends SIEFile {
 		}
 		s.append("#GEN " + SIEFile.s_dateFormat.format(m_genDatum) + "\r\n\r\n");
 		s.append("#FNAMN \"" + (m_fnamn!=null ? m_fnamn : "") + "\"\r\n");
+		// ADRESS
+		String rar = getRARSpecification();
+		if (rar!=null) {
+			s.append(rar +"\r\n");
+		}
+		// RAR 0
+		// RAR -1
 		s.append("#ORGNR " + (m_orgNr!=null ? m_orgNr : "") + "\r\n");
 		s.append("#KPTYP " + (m_kptyp!=null ? m_kptyp : "") + "\r\n");
 		s.append("\r\n");
