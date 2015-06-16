@@ -246,11 +246,11 @@ public class SIEFile {
 			m_resRecs = new TreeMap<String,ResRec>();
     	}
     	// First check if there's an existing record
-    	ResRec existing = m_resRecs.get(rec.getAccountNo());
+    	ResRec existing = m_resRecs.get(rec.getAcctString());
     	if (existing!=null) {
     		existing.setBalance(rec.getBalance()-existing.getBalance());
     	} else {
-    		m_resRecs.put(rec.getAccountNo(), rec);
+    		m_resRecs.put(rec.getAcctString(), rec);
     	}
 	}
 	
@@ -265,11 +265,11 @@ public class SIEFile {
 			m_resRecs = new TreeMap<String,ResRec>();
     	}
     	// First check if there's an existing record
-    	ResRec existing = m_resRecs.get(rec.getAccountNo());
+    	ResRec existing = m_resRecs.get(rec.getAcctString());
     	if (existing!=null) {
     		existing.setBalance(rec.getBalance()+existing.getBalance());
     	} else {
-    		m_resRecs.put(rec.getAccountNo(), rec);
+    		m_resRecs.put(rec.getAcctString(), rec);
     	}
     }
 	

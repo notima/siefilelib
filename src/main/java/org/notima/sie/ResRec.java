@@ -41,6 +41,15 @@ public class ResRec {
     }
     
     
+    /**
+     * Unique string combined with year and account
+     * 
+     * @return
+     */
+    public String getAcctString() {
+    	return(getAccountNo() + "_" + Math.abs(getYearOffset()));
+    }
+    
 	public String toSieString() {
 		StringBuffer s = new StringBuffer();
 		s.append("#RES ");
