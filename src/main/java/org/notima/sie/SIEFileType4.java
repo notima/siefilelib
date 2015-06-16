@@ -10,8 +10,8 @@ import java.util.TreeMap;
 import java.util.Vector;
 
 /**
- * Filtyp 4 �r f�r import/export av transaktioner. Kontoplan, ing�ende balanser
- * och verifikat f�ljer med.
+ * Filtyp 4 är för import/export av transaktioner. Kontoplan, ingående balanser
+ * och verifikat följer med.
  * 
  * @author Daniel Tamm
  * 
