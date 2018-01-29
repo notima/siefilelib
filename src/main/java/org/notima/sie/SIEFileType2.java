@@ -2,7 +2,7 @@ package org.notima.sie;
 
 
 /**
- * Filtyp 2 Är för export av periodsaldon
+ * Filtyp 2 fÃ¶r export av periodsaldon
  * 
  * 
  * @author Daniel Tamm

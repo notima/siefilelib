@@ -95,8 +95,8 @@ public class SIEFile {
     /**
      * Helper function to make sure the text doesn't contain any illegal characters
      * (such as linefeed etc). " are prepended with \
-     * @param text
-     * @return
+     * @param text		The text to be validated
+     * @return			Valid text without illegal characters.
      */
     public static String validateText(String text) {
     	if (text==null) return(null);
@@ -118,6 +118,7 @@ public class SIEFile {
     
     /**
      * Adds rar specification
+     * @param		r		A RARRecord
      */
     public void addRARRec(RARRec r) {
     	if (r==null) return;
@@ -131,6 +132,7 @@ public class SIEFile {
      * Print RAR specification according to standard format
      * #RAR 0
      * #RAR -1 etc
+     * @return	Financial year specification
      */
     public String getRARSpecification() {
     	
@@ -156,7 +158,7 @@ public class SIEFile {
     /**
      * Adds account record to the SIE-file.
      * 
-     * @param rec
+     * @param rec		An AccountRec to be added. 
      */
     public void addAccountRecord(AccountRec rec) {
     	if (m_accountMap==null) {
@@ -168,7 +170,7 @@ public class SIEFile {
     
     /**
      * Sets account map from external source
-     * @param accountMap
+     * @param accountMap		The account map to be used.
      */
     public void setAccountMap(Map<String,AccountRec> accountMap) {
     	m_accountMap = accountMap;
