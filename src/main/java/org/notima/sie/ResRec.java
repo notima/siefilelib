@@ -44,7 +44,7 @@ public class ResRec {
     /**
      * Unique string combined with year and account
      * 
-     * @return
+     * @return		Account number concatenated with the year offset.
      */
     public String getAcctString() {
     	return(getAccountNo() + "_" + Math.abs(getYearOffset()));

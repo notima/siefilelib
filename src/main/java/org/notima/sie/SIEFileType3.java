@@ -1,7 +1,7 @@
 package org.notima.sie;
 
 /**
- * Filtyp 3 Är för export av objektsaldon
+ * Filtyp 3 fÃ¶r export av objektsaldon
  * 
  * @author Daniel Tamm
  *

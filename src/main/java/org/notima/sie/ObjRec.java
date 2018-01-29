@@ -59,9 +59,9 @@ public class ObjRec {
 	/**
 	 * Makes a record of object records from an object string
 	 * 
-	 * @param str
-	 * @return
-	 * @throws SIEParseException
+	 * @param str	Object string from SIE-file
+	 * @return		A list of object records
+	 * @throws SIEParseException	A parse exception if the str doesn't comply to the format.
 	 */
 	public static List<ObjRec> parseObjList(String str) throws SIEParseException {
 		List<ObjRec> result = new ArrayList<ObjRec>();
