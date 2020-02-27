@@ -3,12 +3,14 @@ package org.notima.sie.test;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import junit.framework.TestCase;
-
+import org.junit.Test;
 import org.notima.sie.VerRec;
+
+import junit.framework.TestCase;
 
 public class TestVerRec extends TestCase {
 
+	@Test
 	public void testVerRecString() {
 
 		try {

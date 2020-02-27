@@ -21,7 +21,6 @@ public class SIEFileType1 extends SIEFile {
 	private Vector<VerRec> m_verRecs;
 
 	private int m_lineNo;
-	private int m_verNo;
 	private String m_line;
 
 	public SIEFileType1(String filename) {
@@ -54,7 +53,6 @@ public class SIEFileType1 extends SIEFile {
 		// First read basic attributes
 		super.readFile();
 		m_lineNo = 0;
-		m_verNo = 0;
 		AccountRec account;
 		// Create map for storing SRU-codes
 		m_sruRecs = new TreeMap<String, SRURec>();
