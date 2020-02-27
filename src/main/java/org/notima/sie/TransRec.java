@@ -47,8 +47,13 @@ public class TransRec {
 			}
 		}
 		if (m.groupCount()>3) {
-			String g4 = m.group(4);
-			if (g4.length()>0) {
+			String g4 = null;
+			try {
+				g4 = m.group(4);
+			} catch (IllegalStateException ise) {
+				g4 = null;
+			}
+			if (g4!=null && g4.length()>0) {
 				Matcher m2 = transPatternPart2.matcher(g4);
 				if (m2.matches()) {
 					if (m2.group(1)!=null && m2.group(1).length()==8) {
