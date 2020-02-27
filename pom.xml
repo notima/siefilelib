@@ -31,8 +31,10 @@ www.sie.se</description>
 
   <scm>
   	<developerConnection>Daniel Tamm</developerConnection>
+  	<connection>scm:git:git://github.com/notima/siefilelib.git</connection>
   	<url>https://github.com/notima/siefilelib</url>
   </scm>
+  
   <organization>
   	<name>Notima System Integration AB</name>
   	<url>https://github.com/notima</url>
@@ -41,6 +43,18 @@ www.sie.se</description>
   	<url>https://github.com/notima/siefilelib/issues</url>
   	<system>GitHub</system>
   </issueManagement>
+
+  <inceptionYear>2012</inceptionYear>
+  <url>https://github.com/notima/siefilelib</url>
+
+	<developers>
+		<developer>
+			<name>Daniel Tamm</name>
+			<email>daniel@notima.se</email>
+			<organization>Notima System Integration AB</organization>
+			<organizationUrl>https://github.com/notima</organizationUrl>
+		</developer>
+	</developers>
 
   <dependencies>
   	<dependency>
