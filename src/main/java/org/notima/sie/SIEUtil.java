@@ -5,6 +5,8 @@ import java.util.List;
 
 public class SIEUtil {
 
+	public static String SIEFileLibString = "https://github.com/notima/siefilelib";
+	
 	/**
 	 * Splits a line into columns.
 	 * The format of s is assumed to be the SIE-format where white space is column
