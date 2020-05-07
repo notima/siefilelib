@@ -86,7 +86,7 @@ public class SIEFile {
     /**
      * Constructor.
      * 
-     * @param	The path of the file to be read
+     * @param	filePath	The path of the file to be read
      */
     public SIEFile(String filePath) {
         m_sieFile = new File(filePath);
@@ -201,8 +201,8 @@ public class SIEFile {
 	/**
 	 * Return fiscal year
 	 * 
-	 * @param	0 for this year
-	 * 			-1 for previous year
+	 * @param	offset 0 for this year
+	 * 				  -1 for previous year
 	 * @return	A RARRec if the information is available
 	 */
 	public RARRec getFiscalYear(int offset) {
@@ -213,7 +213,6 @@ public class SIEFile {
 	 * Set balance records. There can be more than one or two balance records per account
 	 * UB and IB
 	 * 
-	 * @return
 	 */
 	public void setBalanceMap(Map<String, List<BalanceRec>> rec) {
 		m_balanceRecs = rec;
