@@ -389,7 +389,7 @@ public class SIEFile {
     }
 
     private void parseGen(String line) throws SIEParseException {
-        Pattern flaggaPattern = Pattern.compile("#GEN\\s+(\\d{8})\\s*?(\\w*?)");
+        Pattern flaggaPattern = Pattern.compile("#GEN\\s+(\\d{8})\\s*?(.*?)");
         Matcher m = flaggaPattern.matcher(line);
         if (m.matches()) {
             try {
@@ -425,7 +425,7 @@ public class SIEFile {
     }
     
     private void parseOrgNr(String line) throws SIEParseException {
-        Pattern flaggaPattern = Pattern.compile("#ORGNR\\s+(\\d{6}-{0,1}\\d{4})");
+        Pattern flaggaPattern = Pattern.compile("#ORGNR\\s+\"?(\\d{6}-{0,1}\\d{4})\"?\\s+.*");
         Matcher m = flaggaPattern.matcher(line);
         if (m.matches()) {
             m_orgNr = m.group(1);
