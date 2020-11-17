@@ -345,7 +345,7 @@ public class SIEFile {
     }
     //====================================================
     // Parse methods
-    private void parseFlagga(String line) throws SIEParseException {
+    public void parseFlagga(String line) throws SIEParseException {
         Pattern flaggaPattern = Pattern.compile("#FLAGGA\\s+(\\d)");
         Matcher m = flaggaPattern.matcher(line);
         if (m.matches()) {
@@ -355,7 +355,7 @@ public class SIEFile {
         }
     }
 
-    private void parseFormat(String line) throws SIEParseException {
+    public void parseFormat(String line) throws SIEParseException {
         Pattern flaggaPattern = Pattern.compile("#FORMAT\\s+(\\w+)");
         Matcher m = flaggaPattern.matcher(line);
         if (m.matches()) {
@@ -368,7 +368,7 @@ public class SIEFile {
         }
     }
 
-    private void parseSieTyp(String line) throws SIEParseException {
+    public void parseSieTyp(String line) throws SIEParseException {
         Pattern flaggaPattern = Pattern.compile("#SIETYP\\s+(\\d)");
         Matcher m = flaggaPattern.matcher(line);
         if (m.matches()) {
@@ -378,7 +378,7 @@ public class SIEFile {
         }
     }
 
-    private void parseProgram(String line) throws SIEParseException {
+    public void parseProgram(String line) throws SIEParseException {
         Pattern flaggaPattern = Pattern.compile("#PROGRAM\\s+(.*)");
         Matcher m = flaggaPattern.matcher(line);
         if (m.matches()) {
@@ -388,7 +388,7 @@ public class SIEFile {
         }
     }
 
-    private void parseGen(String line) throws SIEParseException {
+    public void parseGen(String line) throws SIEParseException {
         Pattern flaggaPattern = Pattern.compile("#GEN\\s+(\\d{8})\\s*?(.*?)");
         Matcher m = flaggaPattern.matcher(line);
         if (m.matches()) {
@@ -405,7 +405,7 @@ public class SIEFile {
         }
     }
 
-    private void parseFnamn(String line) throws SIEParseException {
+    public void parseFnamn(String line) throws SIEParseException {
         Pattern flaggaPattern = Pattern.compile("#FNAMN\\s+(.*)");
         Matcher m = flaggaPattern.matcher(line);
         if (m.matches()) {
@@ -419,22 +419,37 @@ public class SIEFile {
         }
     }
 
-    private void parseRarRec(String line) throws SIEParseException {
+    public void parseRarRec(String line) throws SIEParseException {
     	RARRec r = new RARRec(line);
     	m_rarMap.put(r.getRarNo(), r);
     }
-    
-    private void parseOrgNr(String line) throws SIEParseException {
-        Pattern flaggaPattern = Pattern.compile("#ORGNR\\s+\"?(\\d{6}-{0,1}\\d{4})\"?\\s+.*");
+
+    /**
+     * Parses org number from a line
+     * 
+     * @param line
+     * @return	The org number.
+     * @throws SIEParseException
+     */
+    public String parseOrgNr(String line) throws SIEParseException {
+        Pattern flaggaPattern = Pattern.compile("#ORGNR\\s+(\\d{6}-{0,1}\\d{4}).*");
         Matcher m = flaggaPattern.matcher(line);
         if (m.matches()) {
             m_orgNr = m.group(1);
+            return m_orgNr;
         } else {
-            throw new SIEParseException("Ogiltigt format. ORGNR");
+        	// Try with quoted org nr
+        	Pattern flaggaPattern2 = Pattern.compile("#ORGNR\\s+\"(\\d{6}-{0,1}\\d{4})\"\\s+.*");
+        	Matcher m2 = flaggaPattern2.matcher(line);
+        	if (m2.matches()) {
+        		m_orgNr = m2.group(1);
+        		return m_orgNr;
+        	}
+            throw new SIEParseException("Ogiltigt format: " + line);
         }
     }
 
-    private void parseKptyp(String line) throws SIEParseException {
+    public void parseKptyp(String line) throws SIEParseException {
         Pattern flaggaPattern = Pattern.compile("#KPTYP\\s+(\\w+)");
         Matcher m = flaggaPattern.matcher(line);
         if (m.matches()) {
