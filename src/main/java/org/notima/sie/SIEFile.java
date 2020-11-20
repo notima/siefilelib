@@ -274,10 +274,32 @@ public class SIEFile {
     	}
     }
 	
+    
+    /**
+     * Reads only the first maxLines lines of the file to determine the
+     * identity of the file.
+     * 
+     * @param maxLines
+     * @throws Exception
+     */
+    public void readFileHeader(long maxLines) throws Exception {
+    	readFile(maxLines);
+    }
+    
+    
+    /**
+     * Reads the complete file and extracts file identification data
+     */    
+    public void readFile() throws Exception {
+    	readFile(null);
+    }
+    
     /**
      * Reads the file and extracts file identification data
+     * 
+     * @param 		maxLines to read. If null, all lines are read.
      */
-    public void readFile() throws Exception {
+    protected void readFile(Long maxLines) throws Exception {
 
         if (!m_sieFile.exists()) {
             throw new Exception("Filen " + m_sieFile.getAbsolutePath() + " finns inte.");
@@ -290,6 +312,7 @@ public class SIEFile {
         m_lines = new Vector<String>();
         String line;
         boolean lineRead;
+        long lineCount = 0;
         while ((line = fr.readLine()) != null) {
             lineRead = false;
             if (line.startsWith("#FLAGGA")) {
@@ -338,6 +361,12 @@ public class SIEFile {
             // If the line hasn't been recognized, add it
             if (!lineRead) {
                 m_lines.add(line);
+            }
+            if (maxLines!=null) {
+            	lineCount++;
+            	if (lineCount>=maxLines) {
+            		break;
+            	}
             }
         }
         fr.close();
