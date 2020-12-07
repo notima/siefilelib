@@ -3,7 +3,7 @@
   <groupId>org.notima</groupId>
   <artifactId>siefilelib</artifactId>
   <packaging>bundle</packaging>
-  <version>1.0.4-SNAPSHOT</version>
+  <version>1.0.4</version>
   <name>SIE-file library</name>
   <description>Java library to manage (read/write) SIE-files.
 SIE is an open standard for accounting information in Sweden.
@@ -159,7 +159,7 @@ www.sie.se</description>
 				<executions>
 					<execution>
 						<id>sign-artifacts</id>
-						<phase>deploy</phase>
+						<phase>verify</phase>
 						<goals>
 							<goal>sign</goal>
 						</goals>
