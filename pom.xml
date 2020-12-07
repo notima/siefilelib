@@ -110,6 +110,9 @@ www.sie.se</description>
 					<serverId>ossrh</serverId>
 					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
 					<autoReleaseAfterClose>false</autoReleaseAfterClose>
+					<stagingProgressTimeoutMinutes>10</stagingProgressTimeoutMinutes>
+					<keepStagingRepositoryOnCloseRuleFailure>true</keepStagingRepositoryOnCloseRuleFailure>
+					<keepStagingRepositoryOnFailure>true</keepStagingRepositoryOnFailure>
 				</configuration>
 			</plugin>
 
