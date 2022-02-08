@@ -1,4 +1,7 @@
-package org.notima.sie;
+package org.notima.sie.tools;
+
+import org.notima.sie.SIEFile;
+import org.notima.sie.SIEFileType4;
 
 public class SIEFileReader {
 

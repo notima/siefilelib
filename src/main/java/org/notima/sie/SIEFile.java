@@ -91,7 +91,7 @@ public class SIEFile {
     public SIEFile(String filePath) {
         m_sieFile = new File(filePath);
     }
-
+    
     /**
      * Helper function to make sure the text doesn't contain any illegal characters
      * (such as linefeed etc). " are prepended with \
@@ -114,6 +114,36 @@ public class SIEFile {
     		result.append(c);
     	}
     	return(result.toString());
+    }
+
+    /**
+     * Copy SIE-file headers from another SIE-file
+     * 
+     * @param source
+     */
+    public void copyHeadersFrom(SIEFile source) {
+    	m_flagga = source.m_flagga;
+    	m_format = source.m_format;
+    	m_sieTyp = source.m_sieTyp;
+    	m_program = source.m_program;
+    	m_fnamn = source.m_fnamn;
+    	m_orgNr = source.m_orgNr;
+    	m_kptyp = source.m_kptyp;
+    }
+    
+    /**
+     * Checks if the SIE-file has required headers
+     * 
+     * @return		True if required headers are present.
+     */
+    public boolean hasRequiredHeaders() {
+    	if (getOrgNr()==null || getOrgNr().trim().length()==0) {
+    		return false;
+    	}
+    	if (m_sieTyp==null || m_sieTyp.trim().length()==0) {
+    		return false;
+    	}
+    	return true;
     }
     
     /**
@@ -344,7 +374,11 @@ public class SIEFile {
                 lineRead = true;
             }
             if (line.startsWith("#KPTYP")) {
-                parseKptyp(line);
+            	try {
+            		parseKptyp(line);
+            	} catch (SIEParseException spe) {
+            		System.err.println("KPTYP unknown");
+            	}
                 lineRead = true;
             }
             if (line.startsWith("#VALUTA")) {
