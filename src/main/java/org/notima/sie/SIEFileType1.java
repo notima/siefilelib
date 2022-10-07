@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.Vector;
 
+import org.notima.sie.SIEParseException.SIEParseExceptionSeverity;
+
 
 /**
  * Filtyp 1 är för export av bokslutssaldon.
@@ -108,7 +110,7 @@ public class SIEFileType1 extends SIEFile {
 		// Make sure it is a left curly bracket
 		if (!m_line.trim().startsWith("{")) {
 			throw new SIEParseException(
-					"Verification record not in curly brackets");
+					"Verification record not in curly brackets", SIEParseExceptionSeverity.CRITICAL);
 		}
 		// Get next line
 		m_line = m_lines.get(++m_lineNo);

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.notima.sie.SIEParseException.SIEParseExceptionSeverity;
+
 public class ObjRec {
 
 	private static Pattern objPattern = 
@@ -27,7 +29,7 @@ public class ObjRec {
 			objId = m.group(2);
 			objName = m.group(3);
 		} else {
-			throw new SIEParseException("Raden aer inte en korrekt #OBJEKT-rad");
+			throw new SIEParseException("Raden aer inte en korrekt #OBJEKT-rad", SIEParseExceptionSeverity.NORMAL);
 		}
 		
 	}
@@ -69,7 +71,7 @@ public class ObjRec {
 		
 		List<String> objStr = SIEUtil.split(str);
 		if (objStr.size()%2!=0) {
-			throw new SIEParseException(str + " aer inte en korrekt objektlista.");
+			throw new SIEParseException(str + " aer inte en korrekt objektlista.", SIEParseExceptionSeverity.NORMAL);
 		}
 		ObjRec r;
 		int dId;
@@ -77,7 +79,7 @@ public class ObjRec {
 			try {
 				dId = Integer.parseInt(objStr.get(i));
 			} catch (NumberFormatException ne) {
-				throw new SIEParseException("ObjString " + str + " invalid");
+				throw new SIEParseException("ObjString " + str + " invalid", SIEParseExceptionSeverity.NORMAL);
 			}
 			r = new ObjRec(dId, objStr.get(i+1));
 			result.add(r);

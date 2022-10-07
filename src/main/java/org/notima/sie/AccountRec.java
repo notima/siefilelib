@@ -7,6 +7,8 @@ package org.notima.sie;
 
 import java.util.regex.*;
 
+import org.notima.sie.SIEParseException.SIEParseExceptionSeverity;
+
 /**
  * Konto och SRU kod
  * 
@@ -32,7 +34,7 @@ public class AccountRec {
             accountNo = m.group(1);
             accountName = m.group(2);
         } else {
-            throw new SIEParseException("Raden aer inte en korrekt #KONTO-rad: " + line);
+            throw new SIEParseException("Raden aer inte en korrekt #KONTO-rad: " + line, SIEParseExceptionSeverity.NORMAL);
         }
         
     }

@@ -3,6 +3,8 @@ package org.notima.sie;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.notima.sie.SIEParseException.SIEParseExceptionSeverity;
+
 public class DimRec {
 
 	private static Pattern dimPattern = 
@@ -18,7 +20,7 @@ public class DimRec {
 			dimId = Integer.parseInt(m.group(1));
 			dimName = m.group(2);
 		} else {
-			throw new SIEParseException("Raden aer inte en korrekt #DIM-rad");
+			throw new SIEParseException("Raden aer inte en korrekt #DIM-rad", SIEParseExceptionSeverity.NORMAL);
 		}
 		
 	}

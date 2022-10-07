@@ -9,6 +9,8 @@ import java.text.ParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.notima.sie.SIEParseException.SIEParseExceptionSeverity;
+
 /**
  *
  * @author Daniel Tamm
@@ -35,10 +37,10 @@ public class RARRec {
         		startDate = new java.sql.Date(SIEFile.s_dateFormat.parse(m.group(2)).getTime());
         		endDate = new java.sql.Date(SIEFile.s_dateFormat.parse(m.group(3)).getTime());
         	} catch (ParseException pe) {
-        		throw new SIEParseException("Raden ar inte en korrekt #RAR-rad: " + line);
+        		throw new SIEParseException("Raden ar inte en korrekt #RAR-rad: " + line, SIEParseExceptionSeverity.CRITICAL);
         	}
         } else {
-            throw new SIEParseException("Raden ar inte en korrekt #RAR-rad: " + line);
+            throw new SIEParseException("Raden ar inte en korrekt #RAR-rad: " + line, SIEParseExceptionSeverity.CRITICAL);
         }
         
         

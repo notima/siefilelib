@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.Vector;
 
+import org.notima.sie.SIEParseException.SIEParseExceptionSeverity;
+
 /**
  * Filtyp 4 är för import/export av transaktioner. Kontoplan, ingående balanser
  * och verifikat följer med.
@@ -70,30 +72,50 @@ public class SIEFileType4 extends SIEFile {
 		// Iterate through the file's lines to parse verfication records
 		while (m_lineNo < m_lines.size()) {
 			m_line = m_lines.get(m_lineNo);
-			if (m_line.startsWith("#KONTO")) {
-				account = new AccountRec(m_line);
-				m_accountMap.put(account.getAccountNo(), account);
-			}
-			if (m_line.startsWith("#SRU")) {
-				sru = new SRURec(m_line);
-				m_sruRecs.put(sru.getAccountNo(), sru);
-			}
-			if (m_line.startsWith("#IB") || m_line.startsWith("#UB")) {
-				balanceRec = new BalanceRec(m_line);
-				// Check if we have a vector for this account
-				brecV = m_balanceRecs.get(balanceRec.getAccountNo());
-				if (brecV == null) {
-					brecV = new Vector<BalanceRec>();
+			try {
+				if (m_line.startsWith("#KONTO")) {
+					account = new AccountRec(m_line);
+					m_accountMap.put(account.getAccountNo(), account);
 				}
-				brecV.add(balanceRec);
-				m_balanceRecs.put(balanceRec.getAccountNo(), brecV);
-			}
-			if (m_line.startsWith("#RES")) {
-				resRec = new ResRec(m_line);
-				m_resRecs.put(resRec.getAccountNo(), resRec);
-			}
-			if (m_line.startsWith("#VER")) {
-				m_verRecs.add(parseVer());
+				if (m_line.startsWith("#SRU")) {
+					sru = new SRURec(m_line);
+					m_sruRecs.put(sru.getAccountNo(), sru);
+				}
+				if (m_line.startsWith("#IB") || m_line.startsWith("#UB")) {
+					try {
+						balanceRec = new BalanceRec(m_line);
+						// Check if we have a vector for this account
+						brecV = m_balanceRecs.get(balanceRec.getAccountNo());
+						if (brecV == null) {
+							brecV = new Vector<BalanceRec>();
+						}
+						brecV.add(balanceRec);
+						m_balanceRecs.put(balanceRec.getAccountNo(), brecV);
+					} catch (SIEParseException ee) {
+						// Downgrade severity since we might just be interested in the vouchers
+						ee.setSeverity(SIEParseExceptionSeverity.HIGH);
+						throw ee;
+					}
+				}
+				if (m_line.startsWith("#RES")) {
+					try {
+						resRec = new ResRec(m_line);
+						m_resRecs.put(resRec.getAccountNo(), resRec);
+					} catch (SIEParseException ee) {
+						// Downgrade severity since we might just be interested in the vouchers
+						ee.setSeverity(SIEParseExceptionSeverity.HIGH);
+						throw ee;
+					}
+				}
+				if (m_line.startsWith("#VER")) {
+					m_verRecs.add(parseVer());
+				}
+			} catch (SIEParseException ee) {
+				if (ee.isCritical())
+					throw ee;
+				else {
+					System.out.println(ee.getMessage());
+				}
 			}
 
 			m_lineNo++; // Read next line
@@ -108,7 +130,7 @@ public class SIEFileType4 extends SIEFile {
 		// Make sure it is a left curly bracket
 		if (!m_line.trim().startsWith("{")) {
 			throw new SIEParseException(
-					"Verification record not in curly brackets");
+					"Verification record not in curly brackets", SIEParseExceptionSeverity.CRITICAL);
 		}
 		// Get next line
 		m_line = m_lines.get(++m_lineNo);

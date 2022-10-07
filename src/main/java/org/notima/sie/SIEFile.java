@@ -3,6 +3,9 @@ package org.notima.sie;
 import java.util.*;
 import java.io.*;
 import java.util.regex.*;
+
+import org.notima.sie.SIEParseException.SIEParseExceptionSeverity;
+
 import java.text.*;
 
 /**
@@ -76,6 +79,8 @@ public class SIEFile {
 	protected Map<String, List<BalanceRec>> m_balanceRecs;
 	// Result record map
 	protected Map<String, ResRec> m_resRecs;
+	
+	protected List<SIEParseException> parseExceptions = new ArrayList<SIEParseException>();
     
     /**
      * Default constructor
@@ -90,6 +95,14 @@ public class SIEFile {
      */
     public SIEFile(String filePath) {
         m_sieFile = new File(filePath);
+    }
+
+    /**
+     * 
+     * @return	Returns the actual file on the file system.
+     */
+    public File getActualFile() {
+    	return m_sieFile;
     }
     
     /**
@@ -184,6 +197,54 @@ public class SIEFile {
     	
     }
     
+    public void copyMapsTo(SIEFile target) {
+    	if (target==null) return;
+    	copyBalanceRecsTo(target);
+    	copyAccountMapTo(target);
+    	copyRARRecsTo(target);
+    	copyResultRecordsTo(target);
+    }
+    
+    
+    public void copyBalanceRecsTo(SIEFile target) {
+    	if (target==null) return;
+    	target.m_balanceRecs = new TreeMap<String,List<BalanceRec>>();
+    	if (m_balanceRecs!=null) {
+    		for (String s : m_balanceRecs.keySet()) {
+    			target.m_balanceRecs.put(s, m_balanceRecs.get(s));
+    		}
+    	}
+    }
+    
+    public void copyAccountMapTo(SIEFile target) {
+    	if (target==null) return;
+    	target.m_accountMap = new TreeMap<String,AccountRec>();
+    	if (m_accountMap!=null) {
+    		for (String s : m_accountMap.keySet()) {
+    			target.m_accountMap.put(s, m_accountMap.get(s));
+    		}
+    	}
+    }
+    
+    public void copyRARRecsTo(SIEFile target) {
+    	if (target==null) return;
+    	target.m_rarMap = new TreeMap<Integer,RARRec>();
+    	if (m_rarMap!=null) {
+    		for (Integer rar : m_rarMap.keySet()) {
+    			target.m_rarMap.put(rar, m_rarMap.get(rar));
+    		}
+    	}
+    }
+    
+    public void copyResultRecordsTo(SIEFile target) {
+    	if (target==null) return;
+    	target.m_resRecs = new TreeMap<String, ResRec>();
+    	if (m_resRecs!=null) {
+    		for (String s : m_resRecs.keySet()) {
+    			target.m_resRecs.put(s, m_resRecs.get(s));
+    		}
+    	}
+    }
     
     /**
      * Adds account record to the SIE-file.
@@ -414,7 +475,7 @@ public class SIEFile {
         if (m.matches()) {
             m_flagga = new Integer(m.group(1));
         } else {
-            throw new SIEParseException("Ogiltigt format. FLAGGA");
+            throw new SIEParseException("Ogiltigt format. FLAGGA", SIEParseExceptionSeverity.NORMAL);
         }
     }
 
@@ -424,10 +485,10 @@ public class SIEFile {
         if (m.matches()) {
             m_format = m.group(1);
             if (!"PC8".equalsIgnoreCase(m_format)) {
-                throw new SIEParseException("PC8 är den enda giltiga teckenuppsättningen. Denna fil har " + m_format);
+                throw new SIEParseException("PC8 är den enda giltiga teckenuppsättningen. Denna fil har " + m_format, SIEParseExceptionSeverity.NORMAL);
             }
         } else {
-            throw new SIEParseException("Ogiltigt format. FORMAT");
+            throw new SIEParseException("Ogiltigt format. FORMAT", SIEParseExceptionSeverity.NORMAL);
         }
     }
 
@@ -437,7 +498,7 @@ public class SIEFile {
         if (m.matches()) {
             m_sieTyp = m.group(1);
         } else {
-            throw new SIEParseException("Ogiltigt format. SIETYP");
+            throw new SIEParseException("Ogiltigt format. SIETYP", SIEParseExceptionSeverity.NORMAL);
         }
     }
 
@@ -447,7 +508,7 @@ public class SIEFile {
         if (m.matches()) {
             m_program = m.group(1);
         } else {
-            throw new SIEParseException("Ogiltigt format. PROGRAM");
+            throw new SIEParseException("Ogiltigt format. PROGRAM", SIEParseExceptionSeverity.NORMAL);
         }
     }
 
@@ -458,13 +519,13 @@ public class SIEFile {
             try {
                 m_genDatum = s_dateFormat.parse(m.group(1));
             } catch (java.text.ParseException pe) {
-                throw new SIEParseException("Ogiltigt datumformat. GEN");
+                throw new SIEParseException("Ogiltigt datumformat. GEN", SIEParseExceptionSeverity.NORMAL);
             }
             if (m.groupCount() > 1) {
                 m_genSign = m.group(2);
             }
         } else {
-            throw new SIEParseException("Ogiltigt format. GEN");
+            throw new SIEParseException("Ogiltigt format. GEN", SIEParseExceptionSeverity.NORMAL);
         }
     }
 
@@ -478,7 +539,7 @@ public class SIEFile {
                 m_fnamn = m_fnamn.substring(1, m_fnamn.length() - 1);
             }
         } else {
-            throw new SIEParseException("Ogiltigt format. FNAMN");
+            throw new SIEParseException("Ogiltigt format. FNAMN", SIEParseExceptionSeverity.NORMAL);
         }
     }
 
@@ -508,7 +569,7 @@ public class SIEFile {
         		m_orgNr = m2.group(1);
         		return m_orgNr;
         	}
-            throw new SIEParseException("Ogiltigt format: " + line);
+            throw new SIEParseException("Ogiltigt format: " + line, SIEParseExceptionSeverity.NORMAL);
         }
     }
 
@@ -518,7 +579,7 @@ public class SIEFile {
         if (m.matches()) {
             m_kptyp = m.group(1);
         } else {
-            throw new SIEParseException("Ogiltigt format. KPTYP");
+            throw new SIEParseException("Ogiltigt format. KPTYP", SIEParseExceptionSeverity.NORMAL);
         }
     }
 

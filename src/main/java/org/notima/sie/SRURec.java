@@ -7,6 +7,8 @@ package org.notima.sie;
 
 import java.util.regex.*;
 
+import org.notima.sie.SIEParseException.SIEParseExceptionSeverity;
+
 /**
  *
  * @author Daniel Tamm
@@ -30,7 +32,7 @@ public class SRURec {
             accountNo = m.group(1);
             SRU = m.group(2);
         } else {
-            throw new SIEParseException("Raden ar inte en korrekt #SRU-rad: " + line);
+            throw new SIEParseException("Raden ar inte en korrekt #SRU-rad: " + line, SIEParseExceptionSeverity.NORMAL);
         }
         
         

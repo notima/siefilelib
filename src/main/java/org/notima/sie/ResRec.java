@@ -7,6 +7,8 @@ package org.notima.sie;
 
 import java.util.regex.*;
 
+import org.notima.sie.SIEParseException.SIEParseExceptionSeverity;
+
 /**
  *
  * @author Daniel Tamm
@@ -35,7 +37,7 @@ public class ResRec {
             accountNo = m.group(2);
             balance = Double.parseDouble(m.group(3));
         } else {
-            throw new SIEParseException("Raden är inte en korrekt RES-rad: " + line);
+            throw new SIEParseException("Raden är inte en korrekt RES-rad: " + line, SIEParseExceptionSeverity.CRITICAL);
         }
         
     }
