@@ -167,7 +167,16 @@ public class VerRec {
 		this.m_transList = transList;
 	}
 
+	private void setDefaultVerDatum() {
+		m_verDatum = Calendar.getInstance().getTime();
+	}
+	
 	public String toSieString() {
+		
+		if (m_verDatum==null) {
+			setDefaultVerDatum();
+		}
+		
 		StringBuffer s = new StringBuffer();
 		s.append("#VER \"" + (m_serie!=null ? m_serie : "") + "\" \"" + (m_verNr!=null ? m_verNr : "") + "\"");
 		s.append(" " + SIEFile.s_dateFormat.format(m_verDatum) + " \"" + (m_verText!=null ? m_verText : "") + "\"");

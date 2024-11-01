@@ -91,6 +91,14 @@ public class TransRec {
 	public void setObjektLista(List<ObjRec> objektLista) {
 		this.m_objektLista = objektLista;
 	}
+	
+	public void addObjekt(ObjRec o) {
+		if (m_objektLista==null) {
+			m_objektLista = new ArrayList<ObjRec>();
+		}
+		m_objektLista.add(o);
+	}
+	
 	public double getBelopp() {
 		return m_belopp;
 	}
@@ -116,15 +124,25 @@ public class TransRec {
 		this.m_kvantitet = kvantitet;
 	}
 	
+	private String toDimIdList() {
+		if (m_objektLista==null || m_objektLista.size()==0) {
+			return "";
+		}
+		List<String> dimIds = new ArrayList<String>();
+		for (ObjRec r : m_objektLista) {
+			dimIds.add(Integer.toString(r.getDimId()) + " \"" + r.getObjId() + "\"");
+		}
+		return String.join(",", dimIds);
+	}
+	
 	/**
 	 * Prints this record in SIE format
 	 * @return
 	 */
 	public String toSieString() {
 		// Create object list
-		String objList = ""; // TODO: Make object list
 		StringBuffer s = new StringBuffer();
-		s.append("    #TRANS " + m_kontoNr + " {" + objList + "} " + 
+		s.append("    #TRANS " + m_kontoNr + " {" + toDimIdList() + "} " + 
 				SIEFile.s_amountFormat.format(m_belopp) + " \"");
 		if (m_transDatum!=null) {
 				s.append(SIEFile.s_dateFormat.format(m_transDatum));

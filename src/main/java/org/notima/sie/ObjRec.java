@@ -21,6 +21,19 @@ public class ObjRec {
 		this.objId = objId;
 	}
 	
+	public static ObjRec buildCostCenterObject(String cc, String description) {
+		ObjRec o = new ObjRec(DimRec.COSTCENTER_ID, cc);
+		o.setObjName(description);
+		return o;
+	}
+	
+	public static ObjRec buildProjectObject(String cc, String description) {
+		ObjRec o = new ObjRec(DimRec.PROJECT_ID, cc);
+		o.setObjName(description);
+		return o;
+	}
+	
+	
 	public ObjRec(String line) throws SIEParseException {
 		
 		Matcher m = objPattern.matcher(line);
@@ -51,7 +64,7 @@ public class ObjRec {
 	}
 
 	public String getObjName() {
-		return objName;
+		return objName!=null ? objName : "";
 	}
 
 	public void setObjName(String objName) {
@@ -89,4 +102,10 @@ public class ObjRec {
 	}
 	
 	
+	
+	public String toSieString() {
+		
+		return "#OBJEKT " + dimId + " \"" + objId + "\" \"" + getObjName() + "\"";
+		
+	}
 }

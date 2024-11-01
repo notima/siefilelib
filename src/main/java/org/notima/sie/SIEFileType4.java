@@ -6,6 +6,7 @@ import java.io.OutputStreamWriter;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.Vector;
 
@@ -184,6 +185,21 @@ public class SIEFileType4 extends SIEFile {
 				s.append(a.toSieString());
 			}
 			s.append("\r\n");
+		}
+		
+		// Dimensions and objects
+		if (m_dimRecs!=null) {
+			for (DimRec dr : m_dimRecs.values()) {
+				s.append(dr.toSieString() + "\r\n");
+			}
+		}
+		
+		if (m_objRecs!=null) {
+			for (Map<String, ObjRec> objMap : m_objRecs.values()) {
+				for (ObjRec or : objMap.values()) {
+					s.append(or.toSieString() + "\r\n");
+				}
+			}
 		}
 		
 		// Add balance records

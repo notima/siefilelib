@@ -79,6 +79,13 @@ public class SIEFile {
 	protected Map<String, List<BalanceRec>> m_balanceRecs;
 	// Result record map
 	protected Map<String, ResRec> m_resRecs;
+	// Dimensions
+	protected Map<Integer, DimRec> m_dimRecs = new TreeMap<Integer, DimRec>();
+	// Objects
+	protected Map<DimRec, Map<String, ObjRec>> m_objRecs = new TreeMap<DimRec, Map<String, ObjRec>>();
+
+	protected Map<String, ObjRec> costCenters = new TreeMap<String, ObjRec>();
+	protected Map<String, ObjRec> projects = new TreeMap<String, ObjRec>();
 	
 	protected List<SIEParseException> parseExceptions = new ArrayList<SIEParseException>();
     
@@ -86,6 +93,7 @@ public class SIEFile {
      * Default constructor
      */
     public SIEFile() {
+    	init();
     }
 
     /**
@@ -95,8 +103,26 @@ public class SIEFile {
      */
     public SIEFile(String filePath) {
         m_sieFile = new File(filePath);
+        init();
     }
 
+    private void init() {
+    	
+    	initStandardDimensions();
+    	
+    }
+    
+    private void initStandardDimensions() {
+
+    	DimRec costCenterDimension = DimRec.getCostCenterDimension();
+    	DimRec projectDimension = DimRec.getProjectDimension();
+    	m_dimRecs.put(Integer.valueOf(costCenterDimension.getDimId()), costCenterDimension);
+    	m_dimRecs.put(Integer.valueOf(projectDimension.getDimId()), projectDimension);
+    	m_objRecs.put(costCenterDimension, costCenters);
+    	m_objRecs.put(projectDimension, projects);
+    	
+    }
+    
     /**
      * 
      * @return	Returns the actual file on the file system.
@@ -157,6 +183,49 @@ public class SIEFile {
     		return false;
     	}
     	return true;
+    }
+    
+    /**
+     * Adds cost center to file
+     * 
+     * @param cc
+     * @param description
+     * @return  The created / added cost center.
+     */
+    public ObjRec addCostCenter(String cc, String description) {
+
+    	if (cc==null) return null;
+    	
+    	ObjRec o = costCenters.get(cc);
+    	if (o==null) {
+    		o = ObjRec.buildCostCenterObject(cc, description);
+    		costCenters.put(cc, o);
+    	} else {
+    		o.setObjName(description);
+    	}
+    	return o;
+    }
+    
+    /**
+     *	Add project to file
+     * 
+     * @param project
+     * @param description
+     * @return 	 The created / added project
+     */
+    public ObjRec addProject(String project, String description) {
+    	
+    	if (project==null) return null;
+    	
+    	ObjRec o = projects.get(project);
+    	if (o==null) {
+    		o = ObjRec.buildProjectObject(project, description);
+    		projects.put(project, o);
+    	} else {
+    		o.setObjName(description);
+    	}
+    	return o;
+    	
     }
     
     /**
@@ -325,7 +394,7 @@ public class SIEFile {
 		recs.add(rec);
 		m_balanceRecs.put(rec.getAccountNo(), recs);
 	}
-
+	
 	/**
 	 * Set difference.
 	 * Sets the result to the difference between the existing result record
