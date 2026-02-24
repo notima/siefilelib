@@ -1,33 +1,27 @@
 package org.notima.sie.test;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.notima.sie.SIEFile;
 
 public class TestParseOrgnr {
 
-	public static String[] orgNrAlts = new String[] {
-		"#ORGNR 555555-5555",
-		"#ORGNR 5555555555",
-		"#ORGNR   \"555555-5555\" 1"
-	};
-	
 	@Test
-	public void TestParseOrgNr() {
-
+	public void testOrgNrWithDash() throws Exception {
 		SIEFile sf = new SIEFile();
-		String orgNr;
-		for (String o : orgNrAlts) {
-			
-			try {
-				orgNr = sf.parseOrgNr(o);
-				System.out.println(orgNr);
-			} catch (Exception ee) {
-				System.out.println(ee.getMessage());
-			}
-			
-		}
-		
-		
+		assertEquals("555555-5555", sf.parseOrgNr("#ORGNR 555555-5555"));
 	}
-	
+
+	@Test
+	public void testOrgNrWithoutDash() throws Exception {
+		SIEFile sf = new SIEFile();
+		assertEquals("5555555555", sf.parseOrgNr("#ORGNR 5555555555"));
+	}
+
+	@Test
+	public void testOrgNrQuotedWithTrailingData() throws Exception {
+		SIEFile sf = new SIEFile();
+		assertEquals("555555-5555", sf.parseOrgNr("#ORGNR   \"555555-5555\" 1"));
+	}
 }

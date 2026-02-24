@@ -3,12 +3,12 @@ package org.notima.sie;
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.Vector;
 
 import org.notima.sie.SIEParseException.SIEParseExceptionSeverity;
 
@@ -21,7 +21,7 @@ import org.notima.sie.SIEParseException.SIEParseExceptionSeverity;
  */
 public class SIEFileType4 extends SIEFile {
 
-	private Vector<VerRec> m_verRecs;
+	private List<VerRec> m_verRecs;
 
 	private int m_lineNo;
 	private String m_line;
@@ -33,20 +33,20 @@ public class SIEFileType4 extends SIEFile {
 	/**
 	 * @return Return the transaction records in the file
 	 */
-	public Vector<VerRec> getVerRecords() {
+	public List<VerRec> getVerRecords() {
 		return(m_verRecs);
 	}
 	
 	public void addVerList(List<VerRec> list) {
 		if (m_verRecs==null) {
-			m_verRecs = new Vector<VerRec>();
+			m_verRecs = new ArrayList<>();
 		}
 		m_verRecs.addAll(list);
 	}
 	
 	public void addVerRecord(VerRec r) {
 		if (m_verRecs==null) {
-			m_verRecs = new Vector<VerRec>();
+			m_verRecs = new ArrayList<>();
 		}
 		m_verRecs.add(r);
 	}
@@ -58,18 +58,18 @@ public class SIEFileType4 extends SIEFile {
 		m_lineNo = 0;
 		AccountRec account;
 		// Create map for storing SRU-codes
-		m_sruRecs = new TreeMap<String, SRURec>();
+		m_sruRecs = new TreeMap<>();
 		SRURec sru;
 		// Create map for storing balance records
-		m_balanceRecs = new TreeMap<String, List<BalanceRec>>();
+		m_balanceRecs = new TreeMap<>();
 		BalanceRec balanceRec;
 		List<BalanceRec> brecV;
 		// Create map for storing balance for result accounts
 		ResRec resRec;
-		m_resRecs = new TreeMap<String, ResRec>();
+		m_resRecs = new TreeMap<>();
 
 		// Create vector for verification records
-		m_verRecs = new Vector<VerRec>();
+		m_verRecs = new ArrayList<>();
 		// Iterate through the file's lines to parse verfication records
 		while (m_lineNo < m_lines.size()) {
 			m_line = m_lines.get(m_lineNo);
@@ -88,7 +88,7 @@ public class SIEFileType4 extends SIEFile {
 						// Check if we have a vector for this account
 						brecV = m_balanceRecs.get(balanceRec.getAccountNo());
 						if (brecV == null) {
-							brecV = new Vector<BalanceRec>();
+							brecV = new ArrayList<>();
 						}
 						brecV.add(balanceRec);
 						m_balanceRecs.put(balanceRec.getAccountNo(), brecV);
@@ -147,22 +147,19 @@ public class SIEFileType4 extends SIEFile {
 	}
 
 	public void writeToFile() throws Exception {
-		
-		// Open account map file (if any)
-		BufferedWriter writer = new BufferedWriter(
-				new OutputStreamWriter(new FileOutputStream(m_sieFile), "IBM437"));
-		writer.append(toSieString());
-		writer.close();
-		
+		try (BufferedWriter writer = new BufferedWriter(
+				new OutputStreamWriter(new FileOutputStream(m_sieFile), "IBM437"))) {
+			writer.append(toSieString());
+		}
 	}
 	
 	public String toSieString() {
 		String superString = super.toSieString();
-		StringBuffer s = new StringBuffer();
+		StringBuilder s = new StringBuilder();
 		s.append(superString);
 		// Add specifics
 		s.append("#SIETYP 4\r\n");
-		s.append("#PROGRAM \"" + (m_program!=null ? m_program : "") + "\"\r\n");
+		s.append("#PROGRAM \"" + (m_program!=null && !m_program.isEmpty() ? m_program : SIEUtil.SIEFileLibString) + "\"\r\n");
 		if (m_genDatum==null) {
 			m_genDatum = Calendar.getInstance().getTime();
 		}
@@ -175,8 +172,10 @@ public class SIEFileType4 extends SIEFile {
 		}
 		// RAR 0
 		// RAR -1
-		s.append("#ORGNR " + (m_orgNr!=null ? m_orgNr : "") + "\r\n");
-		s.append("#KPTYP " + (m_kptyp!=null ? m_kptyp : "") + "\r\n");
+		if (m_orgNr != null && !m_orgNr.isEmpty()) {
+			s.append("#ORGNR " + m_orgNr + "\r\n");
+		}
+		s.append("#KPTYP " + (m_kptyp != null && !m_kptyp.isEmpty() ? m_kptyp : "EUBAS97") + "\r\n");
 		s.append("\r\n");
 		// Add specifications of accounts
 		if (m_accountMap!=null) {
@@ -224,22 +223,22 @@ public class SIEFileType4 extends SIEFile {
 		
 		// Add verifications
 		if (m_verRecs != null) {
-			for (int i = 0; i < m_verRecs.size(); i++) {
-				s.append(m_verRecs.get(i).toSieString());
+			for (VerRec ver : m_verRecs) {
+				s.append(ver.toSieString());
 			}
 		}
 		return (s.toString());
 	}
-	
+
 	public String toString() {
 		String superString = super.toString();
-		StringBuffer s = new StringBuffer();
+		StringBuilder s = new StringBuilder();
 		s.append(superString);
 		// Add verifications
 		if (m_verRecs != null) {
 			s.append("\n");
-			for (int i = 0; i < m_verRecs.size(); i++) {
-				s.append(m_verRecs.get(i).toString());
+			for (VerRec ver : m_verRecs) {
+				s.append(ver.toString());
 			}
 		}
 		return (s.toString());

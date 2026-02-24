@@ -41,7 +41,7 @@ public class TransRec {
 			m_kontoNr = m.group(1);
 			objLine = m.group(2);
 			beloppStr = m.group(3);
-			m_belopp = new Double(beloppStr);
+			m_belopp = Double.parseDouble(beloppStr);
 			if (objLine!=null && objLine.trim().length()>0) {
 				m_objektLista = ObjRec.parseObjList(objLine);
 			}
@@ -72,7 +72,7 @@ public class TransRec {
 						}
 					}
 					if (m2.groupCount()>2 && m2.group(3).trim().length()>0) {
-						m_kvantitet = new Double(m2.group(3));
+						m_kvantitet = Double.parseDouble(m2.group(3));
 					}
 				}
 			}
@@ -94,7 +94,7 @@ public class TransRec {
 	
 	public void addObjekt(ObjRec o) {
 		if (m_objektLista==null) {
-			m_objektLista = new ArrayList<ObjRec>();
+			m_objektLista = new ArrayList<>();
 		}
 		m_objektLista.add(o);
 	}
@@ -141,7 +141,7 @@ public class TransRec {
 	 */
 	public String toSieString() {
 		// Create object list
-		StringBuffer s = new StringBuffer();
+		StringBuilder s = new StringBuilder();
 		s.append("    #TRANS " + m_kontoNr + " {" + toDimIdList() + "} " + 
 				SIEFile.s_amountFormat.format(m_belopp) + " \"");
 		if (m_transDatum!=null) {
@@ -159,7 +159,7 @@ public class TransRec {
 	 * Prints this record in human readable format
 	 */
 	public String toString() {
-		StringBuffer s = new StringBuffer();
+		StringBuilder s = new StringBuilder();
 		s.append("\tKontonr: " + m_kontoNr);
 		s.append("\tBelopp : " + m_belopp);
 		s.append("\t" + (m_transText!=null ? m_transText : "") + "\n");

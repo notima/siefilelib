@@ -79,7 +79,7 @@ public class ObjRec {
 	 * @throws SIEParseException	A parse exception if the str doesn't comply to the format.
 	 */
 	public static List<ObjRec> parseObjList(String str) throws SIEParseException {
-		List<ObjRec> result = new ArrayList<ObjRec>();
+		List<ObjRec> result = new ArrayList<>();
 		if (str==null || str.trim().length()==0) return result;
 		
 		List<String> objStr = SIEUtil.split(str);

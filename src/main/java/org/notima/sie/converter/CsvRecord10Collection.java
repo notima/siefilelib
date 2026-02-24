@@ -2,7 +2,6 @@ package org.notima.sie.converter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import org.notima.sie.ObjRec;
 import org.notima.sie.TransRec;
@@ -15,7 +14,7 @@ public class CsvRecord10Collection {
 	
 	public void add(CsvRecord10 rec) {
 		if (m_records==null) {
-			m_records = new Vector<CsvRecord10>();
+			m_records = new ArrayList<>();
 		}
 		m_records.add(rec);
 	}
@@ -25,7 +24,7 @@ public class CsvRecord10Collection {
 		if (m_records==null || m_records.size()==0)
 			return(null);
 
-		Vector<VerRec> verList = new Vector<VerRec>();
+		List<VerRec> verList = new ArrayList<>();
 		
 		VerRec ver;
 		TransRec trec;

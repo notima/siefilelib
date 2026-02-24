@@ -19,7 +19,7 @@ public class SIEUtil {
 	public static List<String> split(String s) {
 
 		s = s.trim();
-		List<Integer> splitPos = new ArrayList<Integer>();
+		List<Integer> splitPos = new ArrayList<>();
 		char c;
 		boolean inQuote = false;
 		boolean inSplit = false;
@@ -44,7 +44,7 @@ public class SIEUtil {
 		}
 		
 		// When we're here, we have the split positions
-		List<String> result = new ArrayList<String>();
+		List<String> result = new ArrayList<>();
 		for (int i=0; i<splitPos.size(); i++) {
 			if (i==0) {
 				result.add(removeQuotes(s.substring(0, splitPos.get(i))));

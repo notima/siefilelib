@@ -8,10 +8,15 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 @RunWith(Suite.class)
-@SuiteClasses({ 
+@SuiteClasses({
 		SIEFileTest.class,
-		TestVerRec.class
-		 })
+		TestVerRec.class,
+		TestUtil.class,
+		TestParseOrgnr.class,
+		TestRecordParsing.class,
+		TestSIEFileValidator.class,
+		TestObjects.class
+})
 public class AllTests {
 
 	public static Test suite() {

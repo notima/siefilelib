@@ -1,7 +1,6 @@
 package org.notima.sie.tools;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,15 +35,8 @@ public class SieMerger {
 			return;
 		}
 		
-		String[] filesToMerge = dir.list(new FilenameFilter() {
-
-			@Override
-			public boolean accept(File dir, String name) {
-				if (name.toLowerCase().endsWith("si")
-						|| name.toLowerCase().endsWith("se"))
-					return true;
-				return false;
-			}});
+		String[] filesToMerge = dir.list(
+				(d, name) -> name.toLowerCase().endsWith("si") || name.toLowerCase().endsWith("se"));
 
 		
 		if (filesToMerge!=null && filesToMerge.length>0) {

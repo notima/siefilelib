@@ -45,7 +45,7 @@ public class BalanceRec {
     }
 
 	public String toSieString() {
-		StringBuffer s = new StringBuffer();
+		StringBuilder s = new StringBuilder();
 		s.append("#");
 		if (inBalance) {
 			s.append("I");

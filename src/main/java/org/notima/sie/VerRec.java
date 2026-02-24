@@ -1,7 +1,11 @@
 package org.notima.sie;
 
-import java.util.*;
-import java.util.regex.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Verifikationspost. Innehaller en eller flera transaktionsposter.
@@ -21,19 +25,19 @@ public class VerRec {
 	private Date				m_verDatum;
 	private String				m_verText;
 	private Date				m_regDatum;
-	private Vector<TransRec>	m_transList;
+	private List<TransRec>	m_transList;
 	private double				m_balance;
 	private double				m_totalCredit;
 	private double				m_totalDebet;
 	
 	public VerRec() {
 		m_balance = 0.0;
-		m_transList = new Vector<TransRec>();
+		m_transList = new ArrayList<>();
 	}
 	
 	public VerRec(String header) {
 		m_balance = 0.0;
-		m_transList = new Vector<TransRec>();
+		m_transList = new ArrayList<>();
 		
 		Matcher m = verPatternPart1.matcher(header);
 		if (m.matches()) {
@@ -157,13 +161,13 @@ public class VerRec {
 	/**
 	 * @return the transList
 	 */
-	public Vector<TransRec> getTransList() {
+	public List<TransRec> getTransList() {
 		return m_transList;
 	}
 	/**
 	 * @param transList the transList to set
 	 */
-	public void setTransList(Vector<TransRec> transList) {
+	public void setTransList(List<TransRec> transList) {
 		this.m_transList = transList;
 	}
 
@@ -177,7 +181,7 @@ public class VerRec {
 			setDefaultVerDatum();
 		}
 		
-		StringBuffer s = new StringBuffer();
+		StringBuilder s = new StringBuilder();
 		s.append("#VER \"" + (m_serie!=null ? m_serie : "") + "\" \"" + (m_verNr!=null ? m_verNr : "") + "\"");
 		s.append(" " + SIEFile.s_dateFormat.format(m_verDatum) + " \"" + (m_verText!=null ? m_verText : "") + "\"");
 		if (m_regDatum!=null) {
@@ -185,15 +189,15 @@ public class VerRec {
 		}
 		s.append("\r\n");
 		s.append("{\r\n");
-		for (int i=0; i<m_transList.size(); i++) {
-			s.append(m_transList.get(i).toSieString());
+		for (TransRec tr : m_transList) {
+			s.append(tr.toSieString());
 		}
 		s.append("}\r\n");
 		return(s.toString());
 	}
 	
 	public String toString() {
-		StringBuffer s = new StringBuffer();
+		StringBuilder s = new StringBuilder();
 		s.append("VerId: " + m_verNr + "\n");
 		s.append("Serie: " + m_serie + "\n");
 		s.append("Ver datum: " + SIEFile.s_dateFormat.format(m_verDatum) + "\n");
@@ -201,8 +205,8 @@ public class VerRec {
 		s.append("Reg datum: " + (m_regDatum!=null ? SIEFile.s_dateFormat.format(m_regDatum) : "") + "\n");
 		s.append("RADER:\n");
 		s.append("======\n");
-		for (int i=0; i<m_transList.size(); i++) {
-			s.append(m_transList.get(i).toString());
+		for (TransRec tr : m_transList) {
+			s.append(tr.toString());
 		}
 		s.append("====== Balans = " + getBalance() + "\n");
 		return(s.toString());

@@ -2,7 +2,6 @@ package org.notima.sie.tools;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import org.notima.sie.SIEFileType4;
 import org.notima.sie.TransRec;
@@ -69,7 +68,7 @@ public class SieValidator {
 		
 	}
 
-	private void validateTransList(Vector<TransRec> transactions) {
+	private void validateTransList(List<TransRec> transactions) {
 		if (transactions==null) return;
 		
 		for (TransRec tr : transactions) {

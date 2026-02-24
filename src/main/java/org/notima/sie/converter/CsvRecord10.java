@@ -2,6 +2,7 @@ package org.notima.sie.converter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 
 public class CsvRecord10 {
 
@@ -21,12 +22,8 @@ public class CsvRecord10 {
 	public static CsvRecord10 parseLine(String line) {
 		CsvRecord10 r = new CsvRecord10();
 		String[] fields = line.split(";");
-		if (fields.length<15) {
-			String[] newFields = new String[15];
-			for (int i=0; i<fields.length; i++) {
-				newFields[i] = fields[i];
-			}
-			fields = newFields;
+		if (fields.length < 15) {
+			fields = Arrays.copyOf(fields, 15);
 		}
 		// 0 debit cash
 		// 1 credit cash

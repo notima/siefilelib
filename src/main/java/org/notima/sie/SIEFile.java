@@ -1,8 +1,16 @@
 package org.notima.sie;
 
-import java.util.*;
-import java.io.*;
-import java.util.regex.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 
 import org.notima.sie.SIEParseException.SIEParseExceptionSeverity;
 
@@ -24,7 +32,9 @@ public class SIEFile {
     static {
     	DecimalFormatSymbols ds = new DecimalFormatSymbols();
     	ds.setDecimalSeparator('.');
+    	ds.setMinusSign('-');
     	s_amountFormat.setDecimalFormatSymbols(ds);
+    	s_qtyFormat.setDecimalFormatSymbols(ds);
     }
     
     //=======================
@@ -70,9 +80,9 @@ public class SIEFile {
     // Lines in file
     protected List<String> m_lines;
     // Fiscal years
-    protected Map<Integer, RARRec> m_rarMap = new TreeMap<Integer, RARRec>();
+    protected Map<Integer, RARRec> m_rarMap = new TreeMap<>();
     // Account map
-    protected Map<String,AccountRec> m_accountMap = new TreeMap<String,AccountRec>();
+    protected Map<String,AccountRec> m_accountMap = new TreeMap<>();
     // SRU Map
 	protected Map<String, SRURec> m_sruRecs;
 	// Balance map
@@ -80,14 +90,14 @@ public class SIEFile {
 	// Result record map
 	protected Map<String, ResRec> m_resRecs;
 	// Dimensions
-	protected Map<Integer, DimRec> m_dimRecs = new TreeMap<Integer, DimRec>();
+	protected Map<Integer, DimRec> m_dimRecs = new TreeMap<>();
 	// Objects
-	protected Map<DimRec, Map<String, ObjRec>> m_objRecs = new TreeMap<DimRec, Map<String, ObjRec>>();
+	protected Map<DimRec, Map<String, ObjRec>> m_objRecs = new TreeMap<>();
 
-	protected Map<String, ObjRec> costCenters = new TreeMap<String, ObjRec>();
-	protected Map<String, ObjRec> projects = new TreeMap<String, ObjRec>();
-	
-	protected List<SIEParseException> parseExceptions = new ArrayList<SIEParseException>();
+	protected Map<String, ObjRec> costCenters = new TreeMap<>();
+	protected Map<String, ObjRec> projects = new TreeMap<>();
+
+	protected List<SIEParseException> parseExceptions = new ArrayList<>();
     
     /**
      * Default constructor
@@ -139,7 +149,7 @@ public class SIEFile {
      */
     public static String validateText(String text) {
     	if (text==null) return(null);
-    	StringBuffer result = new StringBuffer();
+    	StringBuilder result = new StringBuilder();
     	char c;
     	for(int i=0; i<text.length(); i++) {
     		c = text.charAt(i);
@@ -247,8 +257,8 @@ public class SIEFile {
      * @return	Financial year specification
      */
     public String getRARSpecification() {
-    	
-    	StringBuffer buf = new StringBuffer();
+
+    	StringBuilder buf = new StringBuilder();
     	if (m_rarMap==null || m_rarMap.size()==0)
     		return null;
 
@@ -277,7 +287,7 @@ public class SIEFile {
     
     public void copyBalanceRecsTo(SIEFile target) {
     	if (target==null) return;
-    	target.m_balanceRecs = new TreeMap<String,List<BalanceRec>>();
+    	target.m_balanceRecs = new TreeMap<>();
     	if (m_balanceRecs!=null) {
     		for (String s : m_balanceRecs.keySet()) {
     			target.m_balanceRecs.put(s, m_balanceRecs.get(s));
@@ -287,7 +297,7 @@ public class SIEFile {
     
     public void copyAccountMapTo(SIEFile target) {
     	if (target==null) return;
-    	target.m_accountMap = new TreeMap<String,AccountRec>();
+    	target.m_accountMap = new TreeMap<>();
     	if (m_accountMap!=null) {
     		for (String s : m_accountMap.keySet()) {
     			target.m_accountMap.put(s, m_accountMap.get(s));
@@ -297,7 +307,7 @@ public class SIEFile {
     
     public void copyRARRecsTo(SIEFile target) {
     	if (target==null) return;
-    	target.m_rarMap = new TreeMap<Integer,RARRec>();
+    	target.m_rarMap = new TreeMap<>();
     	if (m_rarMap!=null) {
     		for (Integer rar : m_rarMap.keySet()) {
     			target.m_rarMap.put(rar, m_rarMap.get(rar));
@@ -307,7 +317,7 @@ public class SIEFile {
     
     public void copyResultRecordsTo(SIEFile target) {
     	if (target==null) return;
-    	target.m_resRecs = new TreeMap<String, ResRec>();
+    	target.m_resRecs = new TreeMap<>();
     	if (m_resRecs!=null) {
     		for (String s : m_resRecs.keySet()) {
     			target.m_resRecs.put(s, m_resRecs.get(s));
@@ -322,8 +332,7 @@ public class SIEFile {
      */
     public void addAccountRecord(AccountRec rec) {
     	if (m_accountMap==null) {
-			// Create a new accountMap
-			m_accountMap = new TreeMap<String,AccountRec>();
+			m_accountMap = new TreeMap<>();
     	}
     	m_accountMap.put(rec.getAccountNo(), rec);
     }
@@ -338,8 +347,7 @@ public class SIEFile {
     
     public Map<String,AccountRec> getAccountMap() {
     	if (m_accountMap==null) {
-			// Create a new accountMap
-			m_accountMap = new TreeMap<String,AccountRec>();
+			m_accountMap = new TreeMap<>();
     	}
     	return(m_accountMap);
     }
@@ -353,7 +361,7 @@ public class SIEFile {
 	 */
 	public Map<String, List<BalanceRec>> getBalanceMap() {
 		if (m_balanceRecs==null) {
-			m_balanceRecs = new TreeMap<String, List<BalanceRec>>();
+			m_balanceRecs = new TreeMap<>();
 		}
 		return(m_balanceRecs);
 	}
@@ -384,12 +392,11 @@ public class SIEFile {
 	 */
 	public void addBalanceRecord(BalanceRec rec) {
 		if (m_balanceRecs==null) {
-			m_balanceRecs = new TreeMap<String, List<BalanceRec>>();
+			m_balanceRecs = new TreeMap<>();
 		}
-		// First check if we already have records for this account
 		List<BalanceRec> recs = m_balanceRecs.get(rec.getAccountNo());
 		if (recs==null) {
-			recs = new Vector<BalanceRec>();
+			recs = new ArrayList<>();
 		}
 		recs.add(rec);
 		m_balanceRecs.put(rec.getAccountNo(), recs);
@@ -403,8 +410,7 @@ public class SIEFile {
 	 */
 	public void diffResultRecord(ResRec rec) {
     	if (m_resRecs==null) {
-			// Create a new Map
-			m_resRecs = new TreeMap<String,ResRec>();
+			m_resRecs = new TreeMap<>();
     	}
     	// First check if there's an existing record
     	ResRec existing = m_resRecs.get(rec.getAcctString());
@@ -422,8 +428,7 @@ public class SIEFile {
      */
     public void addResultRecord(ResRec rec) {
     	if (m_resRecs==null) {
-			// Create a new Map
-			m_resRecs = new TreeMap<String,ResRec>();
+			m_resRecs = new TreeMap<>();
     	}
     	// First check if there's an existing record
     	ResRec existing = m_resRecs.get(rec.getAcctString());
@@ -467,12 +472,12 @@ public class SIEFile {
 
         // TODO: Automatic code page selection depending on the FORMAT field.
         // Now it's always fixed to PC8 = IBM437 according to the specification.
-        BufferedReader fr = new BufferedReader(
-                new InputStreamReader(new FileInputStream(m_sieFile), "IBM437"));
-        m_lines = new Vector<String>();
+        m_lines = new ArrayList<>();
         String line;
         boolean lineRead;
         long lineCount = 0;
+        try (BufferedReader fr = new BufferedReader(
+                new InputStreamReader(new FileInputStream(m_sieFile), "IBM437"))) {
         while ((line = fr.readLine()) != null) {
             lineRead = false;
             if (line.startsWith("#FLAGGA")) {
@@ -533,8 +538,7 @@ public class SIEFile {
             	}
             }
         }
-        fr.close();
-
+        }
     }
     //====================================================
     // Parse methods
@@ -542,7 +546,7 @@ public class SIEFile {
         Pattern flaggaPattern = Pattern.compile("#FLAGGA\\s+(\\d)");
         Matcher m = flaggaPattern.matcher(line);
         if (m.matches()) {
-            m_flagga = new Integer(m.group(1));
+            m_flagga = Integer.parseInt(m.group(1));
         } else {
             throw new SIEParseException("Ogiltigt format. FLAGGA", SIEParseExceptionSeverity.NORMAL);
         }
@@ -692,7 +696,7 @@ public class SIEFile {
 	}
 	
     public String toSieString() {
-    	StringBuffer buf = new StringBuffer();
+    	StringBuilder buf = new StringBuilder();
     	buf.append("#FLAGGA " + m_flagga + "\r\n");
     	buf.append("#FORMAT " + m_format + "\r\n"); // Only support for PC8
     	return(buf.toString());
@@ -700,7 +704,7 @@ public class SIEFile {
     
     @Override
     public String toString() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("Fil: " + m_sieFile.getAbsolutePath() + "\n");
         buf.append("Inläst av mottagare: " + (m_flagga == 0 ? " Nej" : " Ja") + "\n");
         buf.append("Teckenuppsättning: " + m_format + "\n");

@@ -53,7 +53,7 @@ public class ResRec {
     }
     
 	public String toSieString() {
-		StringBuffer s = new StringBuffer();
+		StringBuilder s = new StringBuilder();
 		s.append("#RES ");
 		s.append(yearOffset + " ");
 		s.append(accountNo + " " + SIEFile.s_amountFormat.format(balance));

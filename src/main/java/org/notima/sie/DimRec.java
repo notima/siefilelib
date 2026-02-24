@@ -62,11 +62,7 @@ public class DimRec implements Comparable<DimRec> {
 
 	@Override
 	public int compareTo(DimRec o) {
-		
-		if (o.dimId < dimId) return -1;
-		if (o.dimId > dimId) return 1;
-		
-		return 0;
+		return Integer.compare(dimId, o.dimId);
 	}
 	
 	public String toSieString() {
