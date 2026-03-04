@@ -15,7 +15,8 @@ import junit.framework.TestSuite;
 		TestParseOrgnr.class,
 		TestRecordParsing.class,
 		TestSIEFileValidator.class,
-		TestObjects.class
+		TestObjects.class,
+		TestSampleFile.class
 })
 public class AllTests {
 
