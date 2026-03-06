@@ -636,7 +636,7 @@ public class SIEFile {
             return m_orgNr;
         } else {
         	// Try with quoted org nr
-        	Pattern flaggaPattern2 = Pattern.compile("#ORGNR\\s+\"(\\d{6}-{0,1}\\d{4})\"\\s+.*");
+        	Pattern flaggaPattern2 = Pattern.compile("#ORGNR\\s+\"(\\d{6}-{0,1}\\d{4})\".*");
         	Matcher m2 = flaggaPattern2.matcher(line);
         	if (m2.matches()) {
         		m_orgNr = m2.group(1);
