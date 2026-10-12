@@ -137,9 +137,15 @@ public class SIEFileType4 extends SIEFile {
 		m_line = m_lines.get(++m_lineNo);
 		TransRec tr;
 		while (!m_line.trim().startsWith("}")) {
-			tr = new TransRec(m_line);
-			// Add transaction to verification
-			rec.addTransRec(tr);
+			try {
+				tr = new TransRec(m_line);
+				// Add transaction to verification
+				rec.addParsedTransRec(tr);
+			} catch (SIEParseException pe) {
+				if (pe.isCritical()) throw pe;
+				// Skip a line that isn't a transaction, but keep the rest of the voucher
+				System.out.println(pe.getMessage());
+			}
 			// Next line
 			m_line = m_lines.get(++m_lineNo);
 		}

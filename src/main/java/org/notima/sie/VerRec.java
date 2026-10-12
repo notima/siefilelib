@@ -10,6 +10,8 @@ import java.util.regex.Pattern;
 /**
  * Verifikationspost. Innehaller en eller flera transaktionsposter.
  * 
+ * <pre>#VER serie vernr verdatum vertext regdatum sign</pre>
+ * 
  * @author Daniel Tamm
  *
  */
@@ -19,12 +21,13 @@ public class VerRec {
 	private static Pattern	verPatternPart1 = 
 		Pattern.compile("#VER\\s+\"{0,1}(.*?)\"{0,1}\\s+\"{0,1}(.*?)\"{0,1}\\s+(\\d{8})(.*)");
 	private static Pattern verPatternPart2 =
-		Pattern.compile("\\s*\"{0,1}(.*?)\"{0,1}\\s*(\\d{8}){0,1}");
+		Pattern.compile("\\s*\"{0,1}(.*?)\"{0,1}\\s*(?:(\\d{8})|\"\")?\\s*(?:\"(.*?)\")?");
 	private String				m_serie = "";
 	private String				m_verNr = "";
 	private Date				m_verDatum;
 	private String				m_verText;
 	private Date				m_regDatum;
+	private String				m_sign;
 	private List<TransRec>	m_transList;
 	private double				m_balance;
 	private double				m_totalCredit;
@@ -60,13 +63,20 @@ public class VerRec {
 							// This shouldn't happen since the pattern matched.
 						}
 					}
+					m_sign = m2.group(3);
+					if (m_sign != null && m_sign.isEmpty()) m_sign = null;
 				}
 			}
 		}
 	}
 	
+	/**
+	 * Adds a transaction. A removed transaction (#BTRANS) is kept but doesn't count
+	 * in the balance and totals.
+	 */
 	public void addTransRec(TransRec tr) {
 		m_transList.add(tr);
+		if (tr.isRemoved()) return;
 		m_balance += tr.getBelopp();
 		if (tr.getBelopp()>0) {
 			m_totalDebet += tr.getBelopp();
@@ -74,6 +84,20 @@ public class VerRec {
 		if (tr.getBelopp()<0) {
 			m_totalCredit += Math.abs(tr.getBelopp());
 		}
+	}
+	
+	/**
+	 * Adds a transaction read from a file, leaving out the #TRANS copy that follows an
+	 * #RTRANS record for programs not knowing #RTRANS, as it is the same transaction.
+	 * 
+	 * @return	True if added, false if left out as such a copy.
+	 */
+	public boolean addParsedTransRec(TransRec tr) {
+		if (!m_transList.isEmpty() && tr.isCompatibilityCopyOf(m_transList.get(m_transList.size()-1))) {
+			return false;
+		}
+		addTransRec(tr);
+		return true;
 	}
 	
 	public double getBalance() {
@@ -171,6 +195,18 @@ public class VerRec {
 		this.m_transList = transList;
 	}
 
+	/**
+	 * Signature of who registered the voucher.
+	 * 
+	 * @return	The signature, or null if not given.
+	 */
+	public String getSign() {
+		return m_sign;
+	}
+	public void setSign(String sign) {
+		m_sign = SIEFile.validateText(sign);
+	}
+
 	private void setDefaultVerDatum() {
 		m_verDatum = Calendar.getInstance().getTime();
 	}
@@ -184,13 +220,23 @@ public class VerRec {
 		StringBuilder s = new StringBuilder();
 		s.append("#VER \"" + (m_serie!=null ? m_serie : "") + "\" \"" + (m_verNr!=null ? m_verNr : "") + "\"");
 		s.append(" " + SIEFile.s_dateFormat.format(m_verDatum) + " \"" + (m_verText!=null ? m_verText : "") + "\"");
+		boolean sign = m_sign != null && !m_sign.isEmpty();
 		if (m_regDatum!=null) {
 			s.append(" " + SIEFile.s_dateFormat.format(m_regDatum));
+		} else if (sign) {
+			s.append(" \"\"");
+		}
+		if (sign) {
+			s.append(" \"" + m_sign + "\"");
 		}
 		s.append("\r\n");
 		s.append("{\r\n");
 		for (TransRec tr : m_transList) {
 			s.append(tr.toSieString());
+			if (tr.isAdded()) {
+				// Followed by the same transaction as #TRANS for programs not knowing #RTRANS
+				s.append(tr.toSieString(TransRec.TransType.TRANS, false));
+			}
 		}
 		s.append("}\r\n");
 		return(s.toString());
@@ -203,6 +249,7 @@ public class VerRec {
 		s.append("Ver datum: " + SIEFile.s_dateFormat.format(m_verDatum) + "\n");
 		s.append("Text: " + m_verText + "\n");
 		s.append("Reg datum: " + (m_regDatum!=null ? SIEFile.s_dateFormat.format(m_regDatum) : "") + "\n");
+		if (m_sign!=null) s.append("Sign: " + m_sign + "\n");
 		s.append("RADER:\n");
 		s.append("======\n");
 		for (TransRec tr : m_transList) {
