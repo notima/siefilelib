@@ -18,7 +18,8 @@ import junit.framework.TestSuite;
 		TestObjects.class,
 		TestSampleFile.class,
 		TestCustomFiles.class,
-		TestCorrectionRecords.class
+		TestCorrectionRecords.class,
+		TestResultRecords.class
 })
 public class AllTests {
 

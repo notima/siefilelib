@@ -92,7 +92,7 @@ public class SIEFileType1 extends SIEFile {
 			}
 			if (m_line.startsWith("#RES")) {
 				resRec = new ResRec(m_line);
-				m_resRecs.put(resRec.getAccountNo(), resRec);
+				m_resRecs.put(resRec.getAcctString(), resRec);
 			}
 			if (m_line.startsWith("#VER")) {
 				m_verRecs.add(parseVer());

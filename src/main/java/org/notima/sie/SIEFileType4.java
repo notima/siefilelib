@@ -101,7 +101,7 @@ public class SIEFileType4 extends SIEFile {
 				if (m_line.startsWith("#RES")) {
 					try {
 						resRec = new ResRec(m_line);
-						m_resRecs.put(resRec.getAccountNo(), resRec);
+						m_resRecs.put(resRec.getAcctString(), resRec);
 					} catch (SIEParseException ee) {
 						// Downgrade severity since we might just be interested in the vouchers
 						ee.setSeverity(SIEParseExceptionSeverity.HIGH);

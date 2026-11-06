@@ -87,7 +87,7 @@ public class SIEFile {
 	protected Map<String, SRURec> m_sruRecs;
 	// Balance map
 	protected Map<String, List<BalanceRec>> m_balanceRecs;
-	// Result record map
+	// Result record map, keyed by ResRec.getAcctString() (account and year offset)
 	protected Map<String, ResRec> m_resRecs;
 	// Dimensions
 	protected Map<Integer, DimRec> m_dimRecs = new TreeMap<>();
@@ -366,6 +366,21 @@ public class SIEFile {
 		return(m_balanceRecs);
 	}
 	
+	/**
+	 * Returns the result records (#RES) of a fiscal year.
+	 *
+	 * @param yearOffset	0 for this year, -1 for the previous year.
+	 * @return	The year's result records, in account order. Never null.
+	 */
+	public List<ResRec> getResultRecords(int yearOffset) {
+		List<ResRec> result = new ArrayList<>();
+		if (m_resRecs==null) return result;
+		for (ResRec r : m_resRecs.values()) {
+			if (r.getYearOffset()==yearOffset) result.add(r);
+		}
+		return result;
+	}
+
 	/**
 	 * Return fiscal year
 	 * 
