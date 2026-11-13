@@ -54,6 +54,23 @@ public class TestRecordParsing {
 	}
 
 	@Test
+	public void testAdressRec() throws Exception {
+		org.notima.sie.AdressRec a = new org.notima.sie.AdressRec("#ADRESS \"Sven Svensson\" \"Box 21\" \"211 20 MALMÖ\" \"040-12345\"");
+		assertEquals("Sven Svensson", a.getContact());
+		assertEquals("Box 21", a.getStreet());
+		assertEquals("211 20", a.getPostalCode());
+		assertEquals("MALMÖ", a.getCity());
+		assertEquals("040-12345", a.getPhone());
+		assertEquals("#ADRESS \"Sven Svensson\" \"Box 21\" \"211 20 MALMÖ\" \"040-12345\"\r\n", a.toSieString());
+
+		org.notima.sie.AdressRec b = new org.notima.sie.AdressRec("#ADRESS \"\" \"Storgatan 1\" \"Malmö\" \"\"");
+		assertNull(b.getContact());
+		assertNull(b.getPostalCode());
+		assertEquals("Malmö", b.getCity());
+		assertNull(b.getPhone());
+	}
+
+	@Test
 	public void testTwoSruCodesOnOneAccount() {
 		org.notima.sie.SIEFileType4 f = new org.notima.sie.SIEFileType4("dummy.se");
 		f.addSruRecord(new SRURec("6072", "7513"));

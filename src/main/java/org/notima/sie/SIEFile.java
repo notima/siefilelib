@@ -60,6 +60,7 @@ public class SIEFile {
     protected String m_bkod;
     // #ADRESS - Adressuppgifter för det aktuella företaget
     protected String m_adress;
+    protected AdressRec m_adressRec;
     // #FNAMN - Fullständigt namn för det företag som exporterats
     protected String m_fnamn;
     // #RAR - Räkenskapsår
@@ -177,6 +178,8 @@ public class SIEFile {
     	m_program = source.m_program;
     	m_fnamn = source.m_fnamn;
     	m_orgNr = source.m_orgNr;
+    	m_adress = source.m_adress;
+    	m_adressRec = source.m_adressRec;
     	m_kptyp = source.m_kptyp;
     }
     
@@ -570,6 +573,15 @@ public class SIEFile {
                 parseOrgNr(line);
                 lineRead = true;
             }
+            if (line.startsWith("#ADRESS")) {
+            	try {
+            		m_adressRec = new AdressRec(line);
+            		m_adress = line.substring("#ADRESS".length()).trim();
+            	} catch (SIEParseException spe) {
+            		System.err.println("ADRESS unreadable: " + line);
+            	}
+                lineRead = true;
+            }
             if (line.startsWith("#KPTYP")) {
             	try {
             		parseKptyp(line);
@@ -747,6 +759,15 @@ public class SIEFile {
 	
 	public String getAdress() {
 		return(m_adress);
+	}
+
+	/** @return	The address of the company (#ADRESS); null if the file has none. */
+	public AdressRec getAdressRec() {
+		return m_adressRec;
+	}
+
+	public void setAdressRec(AdressRec adressRec) {
+		m_adressRec = adressRec;
 	}
 	
 	public void setKpTyp(String kpTyp) {

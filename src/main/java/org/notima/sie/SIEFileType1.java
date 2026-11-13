@@ -150,7 +150,9 @@ public class SIEFileType1 extends SIEFile {
 		}
 		s.append("#GEN " + SIEFile.s_dateFormat.format(m_genDatum) + "\r\n\r\n");
 		s.append("#FNAMN \"" + (m_fnamn!=null ? m_fnamn : "") + "\"\r\n");
-		// ADRESS
+		if (m_adressRec != null && !m_adressRec.isEmpty()) {
+			s.append(m_adressRec.toSieString());
+		}
 		String rar = getRARSpecification();
 		if (rar!=null) {
 			s.append(rar +"\r\n");
