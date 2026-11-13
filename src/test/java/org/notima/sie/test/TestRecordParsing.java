@@ -54,6 +54,16 @@ public class TestRecordParsing {
 	}
 
 	@Test
+	public void testTwoSruCodesOnOneAccount() {
+		org.notima.sie.SIEFileType4 f = new org.notima.sie.SIEFileType4("dummy.se");
+		f.addSruRecord(new SRURec("6072", "7513"));
+		f.addSruRecord(new SRURec("6072", "7653"));
+		f.addSruRecord(new SRURec("6072", "7653"));
+		assertEquals("7513", f.getSruMap().get("6072").getSRU());
+		assertEquals(java.util.Arrays.asList("7513", "7653"), f.getSruCodes().get("6072"));
+	}
+
+	@Test
 	public void testSruRecToSieString() {
 		assertEquals("#SRU 8910 7528\r\n", new SRURec("8910", "7528").toSieString());
 	}

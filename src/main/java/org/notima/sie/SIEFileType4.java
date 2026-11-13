@@ -80,7 +80,7 @@ public class SIEFileType4 extends SIEFile {
 				}
 				if (m_line.startsWith("#SRU")) {
 					sru = new SRURec(m_line);
-					m_sruRecs.put(sru.getAccountNo(), sru);
+					addSruRecord(sru);
 				}
 				if (m_line.startsWith("#IB") || m_line.startsWith("#UB")) {
 					try {
@@ -192,8 +192,8 @@ public class SIEFileType4 extends SIEFile {
 			s.append("\r\n");
 		}
 		if (m_sruRecs!=null && !m_sruRecs.isEmpty()) {
-			for (SRURec r : m_sruRecs.values()) {
-				s.append(r.toSieString());
+			for (List<SRURec> recs : m_sruRecs.values()) {
+				for (SRURec r : recs) s.append(r.toSieString());
 			}
 			s.append("\r\n");
 		}

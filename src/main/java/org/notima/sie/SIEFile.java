@@ -83,8 +83,8 @@ public class SIEFile {
     protected Map<Integer, RARRec> m_rarMap = new TreeMap<>();
     // Account map
     protected Map<String,AccountRec> m_accountMap = new TreeMap<>();
-    // SRU Map
-	protected Map<String, SRURec> m_sruRecs;
+    // SRU codes per account, in the order of the file (an account can have more than one)
+	protected Map<String, List<SRURec>> m_sruRecs;
 	// Balance map
 	protected Map<String, List<BalanceRec>> m_balanceRecs;
 	// Result record map, keyed by ResRec.getAcctString() (account and year offset)
@@ -338,24 +338,50 @@ public class SIEFile {
     }
     
     /**
-     * Adds the SRU code (tax return reporting code) of an account.
+     * Adds an SRU code (tax return reporting code) of an account. An account can have more than
+     * one, ie 6072 with 7513 (INK2R) and 7653 (INK2S, not deductible); a code the account already
+     * has isn't added again.
      */
     public void addSruRecord(SRURec rec) {
-    	if (rec == null || rec.getAccountNo() == null) return;
+    	if (rec == null || rec.getAccountNo() == null || rec.getSRU() == null) return;
     	if (m_sruRecs==null) {
 			m_sruRecs = new TreeMap<>();
     	}
-    	m_sruRecs.put(rec.getAccountNo(), rec);
+    	List<SRURec> recs = m_sruRecs.computeIfAbsent(rec.getAccountNo(), k -> new ArrayList<>());
+    	for (SRURec r : recs) {
+    		if (rec.getSRU().equals(r.getSRU())) return;
+    	}
+    	recs.add(rec);
     }
 
     /**
-     * @return	The SRU codes (#SRU) per account number; empty if the file has none.
+     * @return	The first SRU code (#SRU) per account number, ie the one of the income statement and
+     * 			balance sheet (INK2R); empty if the file has none.
      */
     public Map<String, SRURec> getSruMap() {
-    	if (m_sruRecs==null) {
-			m_sruRecs = new TreeMap<>();
+    	Map<String, SRURec> map = new TreeMap<>();
+    	if (m_sruRecs != null) {
+    		for (Map.Entry<String, List<SRURec>> e : m_sruRecs.entrySet()) {
+    			if (!e.getValue().isEmpty()) map.put(e.getKey(), e.getValue().get(0));
+    		}
     	}
-    	return m_sruRecs;
+    	return map;
+    }
+
+    /**
+     * @return	All SRU codes per account number, in the order of the file: the first is the one of
+     * 			{@link #getSruMap()}, the others (SRU code 2) often of the tax adjustments (INK2S).
+     */
+    public Map<String, List<String>> getSruCodes() {
+    	Map<String, List<String>> map = new TreeMap<>();
+    	if (m_sruRecs != null) {
+    		for (Map.Entry<String, List<SRURec>> e : m_sruRecs.entrySet()) {
+    			List<String> codes = new ArrayList<>();
+    			for (SRURec r : e.getValue()) codes.add(r.getSRU());
+    			if (!codes.isEmpty()) map.put(e.getKey(), codes);
+    		}
+    	}
+    	return map;
     }
 
     /**

@@ -78,7 +78,7 @@ public class SIEFileType1 extends SIEFile {
 			}
 			if (m_line.startsWith("#SRU")) {
 				sru = new SRURec(m_line);
-				m_sruRecs.put(sru.getAccountNo(), sru);
+				addSruRecord(sru);
 			}
 			if (m_line.startsWith("#IB") || m_line.startsWith("#UB")) {
 				balanceRec = new BalanceRec(m_line);
