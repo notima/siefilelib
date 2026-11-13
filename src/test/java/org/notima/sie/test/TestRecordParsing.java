@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.notima.sie.AccountRec;
 import org.notima.sie.BalanceRec;
 import org.notima.sie.ResRec;
+import org.notima.sie.SRURec;
 import org.notima.sie.TransRec;
 import org.notima.sie.VerRec;
 
@@ -34,6 +35,27 @@ public class TestRecordParsing {
 		AccountRec rec = new AccountRec("1610", "Kundfordringar");
 		assertEquals("1610", rec.getAccountNo());
 		assertEquals("Kundfordringar", rec.getAccountName());
+	}
+
+	// SRURec
+
+	@Test
+	public void testSruRecParsing() throws Exception {
+		SRURec rec = new SRURec("#SRU 1930 7281");
+		assertEquals("1930", rec.getAccountNo());
+		assertEquals("7281", rec.getSRU());
+	}
+
+	@Test
+	public void testSruRecQuotedAccount() throws Exception {
+		SRURec rec = new SRURec("#SRU \"8910\" 7528");
+		assertEquals("8910", rec.getAccountNo());
+		assertEquals("7528", rec.getSRU());
+	}
+
+	@Test
+	public void testSruRecToSieString() {
+		assertEquals("#SRU 8910 7528\r\n", new SRURec("8910", "7528").toSieString());
 	}
 
 	// BalanceRec

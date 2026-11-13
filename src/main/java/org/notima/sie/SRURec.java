@@ -16,13 +16,18 @@ import org.notima.sie.SIEParseException.SIEParseExceptionSeverity;
 public class SRURec {
 
     private static Pattern	sruPattern = 
-            Pattern.compile("#SRU\\s+(\\d+?)\\s+(\\d+?)");
+            Pattern.compile("#SRU\\s+\"?([^\\s\"]+)\"?\\s+\"?(\\d+)\"?");
     
     private String  accountNo;
     private String  SRU;
 
     public SRURec() {
         
+    }
+
+    public SRURec(String accountNo, String sru) {
+        this.accountNo = accountNo;
+        this.SRU = sru;
     }
     
     public SRURec(String line) throws SIEParseException {
@@ -52,6 +57,10 @@ public class SRURec {
 
     public void setSRU(String SRU) {
         this.SRU = SRU;
+    }
+
+    public String toSieString() {
+        return("#SRU " + accountNo + " " + SRU + "\r\n");
     }
     
 }

@@ -191,6 +191,12 @@ public class SIEFileType4 extends SIEFile {
 			}
 			s.append("\r\n");
 		}
+		if (m_sruRecs!=null && !m_sruRecs.isEmpty()) {
+			for (SRURec r : m_sruRecs.values()) {
+				s.append(r.toSieString());
+			}
+			s.append("\r\n");
+		}
 		
 		// Dimensions and objects
 		if (m_dimRecs!=null) {

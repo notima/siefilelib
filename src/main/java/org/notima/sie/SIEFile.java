@@ -338,6 +338,27 @@ public class SIEFile {
     }
     
     /**
+     * Adds the SRU code (tax return reporting code) of an account.
+     */
+    public void addSruRecord(SRURec rec) {
+    	if (rec == null || rec.getAccountNo() == null) return;
+    	if (m_sruRecs==null) {
+			m_sruRecs = new TreeMap<>();
+    	}
+    	m_sruRecs.put(rec.getAccountNo(), rec);
+    }
+
+    /**
+     * @return	The SRU codes (#SRU) per account number; empty if the file has none.
+     */
+    public Map<String, SRURec> getSruMap() {
+    	if (m_sruRecs==null) {
+			m_sruRecs = new TreeMap<>();
+    	}
+    	return m_sruRecs;
+    }
+
+    /**
      * Sets account map from external source
      * @param accountMap		The account map to be used.
      */
